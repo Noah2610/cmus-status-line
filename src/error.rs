@@ -19,6 +19,7 @@ pub enum Error {
     CouldntParseTimeToNumber(String),
     CmusMissingData(String),
     CmusStatusNoData,
+    NoFormat,
 }
 
 impl Error {
@@ -55,6 +56,9 @@ impl Error {
             Error::CmusStatusNoData => "CmusStatusBuilder needs CmusData, set \
                                         with `CmusStatusBuilder::data` method"
                 .to_string(),
+            Error::NoFormat => {
+                "No output format given for status line".to_string()
+            }
         }
     }
 }

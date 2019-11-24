@@ -68,11 +68,14 @@ impl fmt::Display for CmusStatus {
         write!(
             f,
             "{}",
-            self.format
-                .iter()
-                .filter_map(|part| self.get_format_text(part))
-                .collect::<Vec<String>>()
-                .join("")
+            htmlescape::encode_minimal(
+                self.format
+                    .iter()
+                    .filter_map(|part| self.get_format_text(part))
+                    .collect::<Vec<String>>()
+                    .join("")
+                    .as_str()
+            )
         )
     }
 }

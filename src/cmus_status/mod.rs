@@ -10,7 +10,7 @@ use status::CmusStatus;
 
 pub fn print_cmus_status() -> MyResult<()> {
     let cmus_status = get_cmus_status()?;
-    print!("\r{}", cmus_status);
+    println!("{}", cmus_status);
     Ok(())
 }
 

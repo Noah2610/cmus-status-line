@@ -2,8 +2,8 @@ mod cmus_status;
 mod error;
 
 fn main() {
-    match cmus_status::get_cmus_status() {
-        Ok(cmus_status) => unimplemented!(),
+    match cmus_status::print_cmus_status() {
+        Ok(_) => (),
         Err(e) => panic!("{}", e),
     }
 }

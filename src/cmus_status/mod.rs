@@ -6,16 +6,19 @@ use std::convert::TryFrom;
 use std::process::Command;
 
 use data::CmusData;
+use status::CmusStatus;
 
-// TODO
-type CmusStatus = ();
+pub fn print_cmus_status() -> MyResult<()> {
+    let cmus_status = get_cmus_status()?;
+    println!("{}", cmus_status);
+    Ok(())
+}
 
 pub fn get_cmus_status() -> MyResult<CmusStatus> {
     let output = get_cmus_remote_output()?;
     let cmus_data = CmusData::try_from(output)?;
     println!("{:#?}", &cmus_data);
-    // CmusStatus::new(cmus_data)
-    unimplemented!()
+    CmusStatus::builder().data(cmus_data).build()
 }
 
 fn get_cmus_remote_output() -> MyResult<String> {

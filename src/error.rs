@@ -18,6 +18,7 @@ pub enum Error {
     CmusUnknownStatus(String),
     CouldntParseTimeToNumber(String),
     CmusMissingData(String),
+    CmusStatusNoData,
 }
 
 impl Error {
@@ -51,6 +52,9 @@ impl Error {
             Error::CmusMissingData(data_name) => {
                 format!("missing required data from cmus-remote: {}", data_name)
             }
+            Error::CmusStatusNoData => "CmusStatusBuilder needs CmusData, set \
+                                        with `CmusStatusBuilder::data` method"
+                .to_string(),
         }
     }
 }

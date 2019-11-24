@@ -1,3 +1,10 @@
+pub mod prelude {
+    pub use super::CmusData;
+    pub use super::CmusStatus;
+    pub use super::CmusTime;
+    pub use super::Seconds;
+}
+
 use crate::error::prelude::*;
 use std::convert::TryFrom;
 use std::path::PathBuf;

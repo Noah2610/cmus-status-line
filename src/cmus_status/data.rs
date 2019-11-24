@@ -16,19 +16,20 @@ pub type Seconds = u32;
 pub struct CmusData {
     status: CmusPlaybackStatus,
     // file /home/noah/Music/Soundtracks/Celeste/23_Official_Celeste_B-Sides_-_02_-_Ben_Prunty_-_Old_Site_Black_Moonrise_Mix.mp3
-    file:     PathBuf,
-    time:     CmusTime,
+    file:     Option<PathBuf>,
+    time:     Option<CmusTime>,
     settings: CmusSettings,
 }
 
 impl CmusData {
-    pub fn get_title(&self) -> String {
-        self.file
-            .file_stem()
-            .unwrap()
-            .to_str()
-            .unwrap()
-            .replace("_", " ")
+    pub fn get_title(&self) -> Option<String> {
+        self.file.as_ref().map(|file| {
+            file.file_stem()
+                .unwrap()
+                .to_str()
+                .unwrap()
+                .replace("_", " ")
+        })
     }
 
     pub fn get_status(&self) -> &CmusPlaybackStatus {
@@ -124,13 +125,16 @@ impl TryFrom<String> for CmusData {
 
         Ok(Self {
             status: status.ok_or(Error::CmusMissingData(STATUS_NAME.into()))?,
-            file:   file.ok_or(Error::CmusMissingData(FILE_NAME.into()))?,
-            time:   CmusTime {
-                duration: time_duration
-                    .ok_or(Error::CmusMissingData(TIME_DURATION_NAME.into()))?,
-                position: time_position
-                    .ok_or(Error::CmusMissingData(TIME_POSITION_NAME.into()))?,
-            },
+            file:   file,
+            time:   time_duration
+                .and_then(|duration| {
+                    time_position
+                        .and_then(|position| Some((duration, position)))
+                })
+                .map(|(duration, position)| CmusTime {
+                    duration: duration,
+                    position: position,
+                }),
             // TODO
             settings: CmusSettings {},
         })

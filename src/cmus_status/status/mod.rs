@@ -29,7 +29,7 @@ impl fmt::Display for CmusStatus {
                 .filter_map(|part| {
                     match part {
                         FormatPart::Text(text) => Some(text.to_string()),
-                        FormatPart::Title => Some(self.data.get_title()),
+                        FormatPart::Title => self.data.get_title(),
                         FormatPart::StatusStr => {
                             Some(self.data.get_status().to_string())
                         }

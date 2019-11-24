@@ -1,3 +1,4 @@
+extern crate dirs;
 extern crate htmlescape;
 extern crate regex;
 extern crate ron;

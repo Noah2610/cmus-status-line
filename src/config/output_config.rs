@@ -1,3 +1,4 @@
+#[derive(Deserialize)]
 pub struct OutputConfig {
     pub escape_html: bool,
 }

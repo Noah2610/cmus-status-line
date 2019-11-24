@@ -1,4 +1,5 @@
 use std::fmt;
+use std::path::PathBuf;
 use std::process::ExitStatus;
 
 pub mod prelude {
@@ -22,6 +23,7 @@ pub enum Error {
     NoFormat,
     InvalidFormatKeyword(String),
     ProgressBarConfigMinLen(usize, String),
+    FailedParsingConfig(PathBuf, String),
 }
 
 impl Error {
@@ -69,6 +71,10 @@ impl Error {
                 "ProgressBar config string must be at least {} characters \
                  long: {}",
                 min_len, config,
+            ),
+            Error::FailedParsingConfig(filepath, e) => format!(
+                "failed parsing config.toml file at {:?}\n{}",
+                filepath, e
             ),
         }
     }

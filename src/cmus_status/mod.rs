@@ -17,7 +17,7 @@ pub fn print_cmus_status() -> MyResult<()> {
 pub fn get_cmus_status() -> MyResult<CmusStatus> {
     let output = get_cmus_remote_output()?;
     let cmus_data = CmusData::try_from(output)?;
-    let config = crate::config::get_config();
+    let config = crate::config::get_config()?;
     CmusStatus::builder()
         .data(cmus_data)
         .format(config.format)

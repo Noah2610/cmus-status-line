@@ -11,6 +11,8 @@ const DEFAULT_FORMAT: &str = r#"
 %{ProgressBar("<####---->")}
 "#;
 
+#[derive(Deserialize)]
+#[serde(default, try_from = "String")]
 pub struct Format {
     parts: Vec<FormatPart>,
 }

@@ -6,7 +6,7 @@ use crate::error::prelude::*;
 use std::fmt;
 
 use builder::CmusStatusBuilder;
-use format::Format;
+use format::{Format, FormatPart};
 
 pub struct CmusStatus {
     data:   CmusData,
@@ -21,6 +21,20 @@ impl CmusStatus {
 
 impl fmt::Display for CmusStatus {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "TODO")
+        write!(
+            f,
+            "{}",
+            self.format
+                .iter()
+                .map(|part| {
+                    match part {
+                        FormatPart::Text(text) => text,
+                        FormatPart::Title => "TITLE",
+                        FormatPart::Artist => "ARTIST",
+                    }
+                })
+                .collect::<Vec<&str>>()
+                .join("&")
+        )
     }
 }

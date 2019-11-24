@@ -8,6 +8,12 @@ pub struct Format {
     parts: Vec<FormatPart>,
 }
 
+impl Format {
+    pub fn iter(&self) -> std::slice::Iter<FormatPart> {
+        self.parts.iter()
+    }
+}
+
 #[derive(Deserialize)]
 pub enum FormatPart {
     Text(String),
@@ -15,11 +21,25 @@ pub enum FormatPart {
     Artist,
 }
 
+impl FormatPart {
+    fn is_text(&self) -> bool {
+        if let FormatPart::Text(_) = self {
+            true
+        } else {
+            false
+        }
+    }
+
+    fn is_keyword(&self) -> bool {
+        !self.is_text()
+    }
+}
+
 impl TryFrom<&str> for Format {
     type Error = Error;
 
     fn try_from(string: &str) -> Result<Self, Self::Error> {
-        let re = Regex::new(r"(?P<keyword>%\w+)|(?P<Text>.+?)").unwrap();
+        let re = Regex::new(r"(%(?P<keyword>\w+))|(?P<text>.+?)").unwrap();
 
         let mut parts = Vec::new();
 
@@ -29,6 +49,19 @@ impl TryFrom<&str> for Format {
                 let part = serde_plain::from_str::<FormatPart>(keyword)
                     .or(Err(Error::InvalidFormatKeyword(keyword.into())))?;
                 parts.push(part);
+            }
+            if let Some(text) = caps.name("text") {
+                if let Some(prev_text) = parts.last_mut().and_then(|last| {
+                    if let FormatPart::Text(prev_text) = last {
+                        Some(prev_text)
+                    } else {
+                        None
+                    }
+                }) {
+                    prev_text.push_str(text.as_str());
+                } else {
+                    parts.push(FormatPart::Text(text.as_str().into()));
+                }
             }
         }
 

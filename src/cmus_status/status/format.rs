@@ -4,11 +4,10 @@ use regex::Regex;
 use std::convert::TryFrom;
 
 const DEFAULT_FORMAT: &str = r#"
-Hello! 
-%{MatchStatus(Playing, "YE BOI")}
-%{MatchStatus(Paused, "nah fam")}
-%{MatchStatus(Stopped, "goodbye")} 
-TITLE: %{Title} - STATUS_STR: %{StatusStr}
+%{MatchStatus(Playing, "")}
+%{MatchStatus(Paused, "")}
+%{MatchStatus(Stopped, "")} 
+%{MaxLen(30, Title)}
 "#;
 
 pub struct Format {
@@ -27,6 +26,7 @@ pub enum FormatPart {
     Title,
     StatusStr,
     MatchStatus(CmusPlaybackStatus, String),
+    MaxLen(usize, Box<FormatPart>), // Inclusive
 }
 
 impl FormatPart {

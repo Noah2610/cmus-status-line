@@ -8,6 +8,8 @@ use std::fmt;
 use builder::CmusStatusBuilder;
 use format::{Format, FormatPart};
 
+const OVERFLOW_STR: &str = "...";
+
 pub struct CmusStatus {
     data:   CmusData,
     format: Format,
@@ -16,6 +18,37 @@ pub struct CmusStatus {
 impl CmusStatus {
     pub fn builder() -> CmusStatusBuilder {
         CmusStatusBuilder::default()
+    }
+
+    fn get_format_text(&self, part: &FormatPart) -> Option<String> {
+        match part {
+            FormatPart::Text(text) => Some(text.to_string()),
+            FormatPart::Title => self.data.get_title(),
+            FormatPart::StatusStr => Some(self.data.get_status().to_string()),
+            FormatPart::MatchStatus(status, text) => {
+                if *status == *self.data.get_status() {
+                    Some(text.to_string())
+                } else {
+                    None
+                }
+            }
+            FormatPart::MaxLen(max, part_inner) => {
+                let max = *max;
+                self.get_format_text(part_inner.as_ref()).map(|text| {
+                    let mut text = text.to_string();
+                    if text.len() > max {
+                        let overflow_str_len = OVERFLOW_STR.len();
+                        if max >= overflow_str_len * 2 {
+                            text.truncate(max - overflow_str_len);
+                            text.push_str(OVERFLOW_STR);
+                        } else {
+                            text.truncate(max);
+                        }
+                    }
+                    text
+                })
+            }
+        }
     }
 }
 
@@ -26,22 +59,7 @@ impl fmt::Display for CmusStatus {
             "{}",
             self.format
                 .iter()
-                .filter_map(|part| {
-                    match part {
-                        FormatPart::Text(text) => Some(text.to_string()),
-                        FormatPart::Title => self.data.get_title(),
-                        FormatPart::StatusStr => {
-                            Some(self.data.get_status().to_string())
-                        }
-                        FormatPart::MatchStatus(status, text) => {
-                            if *status == *self.data.get_status() {
-                                Some(text.to_string())
-                            } else {
-                                None
-                            }
-                        }
-                    }
-                })
+                .filter_map(|part| self.get_format_text(part))
                 .collect::<Vec<String>>()
                 .join("")
         )

@@ -24,8 +24,13 @@ impl CmusStatus {
     }
 
     fn get_format_text(&self, part: &FormatPart) -> Option<String> {
+        let mut maybe_escape_html = true;
+
         match part {
-            FormatPart::Text(text) => Some(text.to_string()),
+            FormatPart::Text(text) => {
+                maybe_escape_html = false; // Never escape literal text
+                Some(text.to_string())
+            }
             FormatPart::Title => self.data.get_title(),
             FormatPart::StatusStr => Some(self.data.get_status().to_string()),
             FormatPart::MatchStatus(status, text) => {
@@ -63,6 +68,13 @@ impl CmusStatus {
                 }
             }
         }
+        .map(|s| {
+            if maybe_escape_html {
+                self.maybe_escape_html(s.as_str())
+            } else {
+                s
+            }
+        })
     }
 
     fn maybe_escape_html(&self, text: &str) -> String {
@@ -79,14 +91,12 @@ impl fmt::Display for CmusStatus {
         write!(
             f,
             "{}",
-            self.maybe_escape_html(
-                self.format
-                    .iter()
-                    .filter_map(|part| self.get_format_text(part))
-                    .collect::<Vec<String>>()
-                    .join("")
-                    .as_str()
-            )
+            self.format
+                .iter()
+                .filter_map(|part| self.get_format_text(part))
+                .collect::<Vec<String>>()
+                .join("")
+                .as_str()
         )
     }
 }

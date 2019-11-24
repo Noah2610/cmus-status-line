@@ -26,12 +26,19 @@ impl fmt::Display for CmusStatus {
             "{}",
             self.format
                 .iter()
-                .map(|part| {
+                .filter_map(|part| {
                     match part {
-                        FormatPart::Text(text) => text.to_string(),
-                        FormatPart::Title => self.data.get_title(),
+                        FormatPart::Text(text) => Some(text.to_string()),
+                        FormatPart::Title => Some(self.data.get_title()),
                         FormatPart::StatusStr => {
-                            self.data.get_status().to_string()
+                            Some(self.data.get_status().to_string())
+                        }
+                        FormatPart::MatchStatus(status, text) => {
+                            if *status == *self.data.get_status() {
+                                Some(text.to_string())
+                            } else {
+                                None
+                            }
                         }
                     }
                 })

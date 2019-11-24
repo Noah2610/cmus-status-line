@@ -1,8 +1,15 @@
+use super::*;
 use crate::error::prelude::*;
 use regex::Regex;
 use std::convert::TryFrom;
 
-const DEFAULT_FORMAT: &str = "TITLE: %Title - STATUS_STR: %StatusStr";
+const DEFAULT_FORMAT: &str = r#"
+Hello! 
+%{MatchStatus(Playing, "YE BOI")}
+%{MatchStatus(Paused, "nah fam")}
+%{MatchStatus(Stopped, "goodbye")} 
+TITLE: %{Title} - STATUS_STR: %{StatusStr}
+"#;
 
 pub struct Format {
     parts: Vec<FormatPart>,
@@ -19,6 +26,7 @@ pub enum FormatPart {
     Text(String),
     Title,
     StatusStr,
+    MatchStatus(CmusPlaybackStatus, String),
 }
 
 impl FormatPart {
@@ -39,14 +47,14 @@ impl TryFrom<&str> for Format {
     type Error = Error;
 
     fn try_from(string: &str) -> Result<Self, Self::Error> {
-        let re = Regex::new(r"(%(?P<keyword>\w+))|(?P<text>.+?)").unwrap();
+        let re = Regex::new(r"(%\{(?P<keyword>.+?)\})|(?P<text>.+?)").unwrap();
 
         let mut parts = Vec::new();
 
         for caps in re.captures_iter(string) {
             if let Some(keyword) = caps.name("keyword") {
                 let keyword = keyword.as_str();
-                let part = serde_plain::from_str::<FormatPart>(keyword)
+                let part = ron::de::from_str::<FormatPart>(keyword)
                     .or(Err(Error::InvalidFormatKeyword(keyword.into())))?;
                 parts.push(part);
             }

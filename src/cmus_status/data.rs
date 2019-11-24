@@ -1,6 +1,6 @@
 pub mod prelude {
     pub use super::CmusData;
-    pub use super::CmusStatus;
+    pub use super::CmusPlaybackStatus;
     pub use super::CmusTime;
     pub use super::Seconds;
 }
@@ -14,7 +14,7 @@ pub type Seconds = u32;
 
 #[derive(Debug)]
 pub struct CmusData {
-    status: CmusStatus,
+    status: CmusPlaybackStatus,
     // file /home/noah/Music/Soundtracks/Celeste/23_Official_Celeste_B-Sides_-_02_-_Ben_Prunty_-_Old_Site_Black_Moonrise_Mix.mp3
     file:     PathBuf,
     time:     CmusTime,
@@ -31,7 +31,7 @@ impl CmusData {
             .replace("_", " ")
     }
 
-    pub fn get_status(&self) -> &CmusStatus {
+    pub fn get_status(&self) -> &CmusPlaybackStatus {
         &self.status
     }
 }
@@ -81,9 +81,12 @@ impl TryFrom<String> for CmusData {
 
             match *data_name {
                 STATUS_NAME => {
-                    status = Some(CmusStatus::try_from(*words.get(1).ok_or(
-                        Error::CmusExpectDataArguments(1, line.into()),
-                    )?)?);
+                    status = Some(CmusPlaybackStatus::try_from(
+                        *words.get(1).ok_or(Error::CmusExpectDataArguments(
+                            1,
+                            line.into(),
+                        ))?,
+                    )?);
                 }
                 FILE_NAME => {
                     file = Some(PathBuf::from(*words.get(1).ok_or(
@@ -135,14 +138,14 @@ impl TryFrom<String> for CmusData {
 }
 
 // status playing
-#[derive(Debug)]
-pub enum CmusStatus {
+#[derive(Debug, PartialEq, Deserialize)]
+pub enum CmusPlaybackStatus {
     Playing,
     Paused,
     Stopped,
 }
 
-impl TryFrom<&str> for CmusStatus {
+impl TryFrom<&str> for CmusPlaybackStatus {
     type Error = Error;
 
     fn try_from(status_str: &str) -> Result<Self, Self::Error> {
@@ -151,23 +154,23 @@ impl TryFrom<&str> for CmusStatus {
         const STATUS_STOPPED: &str = "stopped";
 
         match status_str.to_lowercase().as_str() {
-            STATUS_PLAYING => Ok(CmusStatus::Playing),
-            STATUS_PAUSED => Ok(CmusStatus::Paused),
-            STATUS_STOPPED => Ok(CmusStatus::Stopped),
+            STATUS_PLAYING => Ok(CmusPlaybackStatus::Playing),
+            STATUS_PAUSED => Ok(CmusPlaybackStatus::Paused),
+            STATUS_STOPPED => Ok(CmusPlaybackStatus::Stopped),
             s => Err(Error::CmusUnknownStatus(s.into())),
         }
     }
 }
 
-impl fmt::Display for CmusStatus {
+impl fmt::Display for CmusPlaybackStatus {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(
             f,
             "{}",
             match self {
-                CmusStatus::Playing => "Playing",
-                CmusStatus::Paused => "Paused",
-                CmusStatus::Stopped => "Stopped",
+                CmusPlaybackStatus::Playing => "Playing",
+                CmusPlaybackStatus::Paused => "Paused",
+                CmusPlaybackStatus::Stopped => "Stopped",
             }
         )
     }

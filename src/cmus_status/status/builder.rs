@@ -2,9 +2,9 @@ use super::*;
 
 #[derive(Default)]
 pub struct CmusStatusBuilder {
-    data:     Option<CmusData>,
-    format:   Option<Format>,
-    settings: Option<Settings>,
+    data:   Option<CmusData>,
+    format: Option<Format>,
+    config: Option<OutputConfig>,
 }
 
 impl CmusStatusBuilder {
@@ -13,25 +13,21 @@ impl CmusStatusBuilder {
         self
     }
 
-    pub fn format<T>(mut self, into_format: T) -> MyResult<Self>
-    where
-        T: std::convert::TryInto<Format>,
-        Error: std::convert::From<<T as std::convert::TryInto<Format>>::Error>,
-    {
-        self.format = Some(into_format.try_into()?);
-        Ok(self)
+    pub fn format(mut self, format: Format) -> Self {
+        self.format = Some(format);
+        self
     }
 
-    pub fn settings(mut self, settings: Settings) -> Self {
-        self.settings = Some(settings);
+    pub fn config(mut self, config: OutputConfig) -> Self {
+        self.config = Some(config);
         self
     }
 
     pub fn build(self) -> MyResult<CmusStatus> {
         Ok(CmusStatus {
-            data:     self.data.ok_or(Error::CmusStatusNoData)?,
-            format:   self.format.unwrap_or_else(Default::default),
-            settings: self.settings.unwrap_or_else(Default::default),
+            data:   self.data.ok_or(Error::CmusStatusNoData)?,
+            format: self.format.unwrap_or_else(Default::default),
+            config: self.config.unwrap_or_else(Default::default),
         })
     }
 }

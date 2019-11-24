@@ -7,7 +7,7 @@ const DEFAULT_FORMAT: &str = r#"
 %{MatchStatus(Playing, "")}
 %{MatchStatus(Paused, "")}
 %{MatchStatus(Stopped, "")} 
-%{MaxLen(30, Title)}  
+%{MaxLen(60, Title)}  
 %{ProgressBar("<####---->")}
 "#;
 
@@ -19,41 +19,16 @@ impl Format {
     pub fn iter(&self) -> std::slice::Iter<FormatPart> {
         self.parts.iter()
     }
-}
 
-#[derive(Deserialize)]
-pub enum FormatPart {
-    Text(String),
-    Title,
-    StatusStr,
-    MatchStatus(CmusPlaybackStatus, String),
-    MaxLen(usize, Box<FormatPart>), // Inclusive
-    ProgressBar(ProgressBarConfig),
-}
-
-impl FormatPart {
-    fn is_text(&self) -> bool {
-        if let FormatPart::Text(_) = self {
-            true
-        } else {
-            false
-        }
-    }
-
-    fn is_keyword(&self) -> bool {
-        !self.is_text()
-    }
-}
-
-impl TryFrom<&str> for Format {
-    type Error = Error;
-
-    fn try_from(string: &str) -> Result<Self, Self::Error> {
+    fn try_from_string<S>(string: S) -> MyResult<Self>
+    where
+        S: ToString,
+    {
+        let string = string.to_string();
         let re = Regex::new(r"(%\{(?P<keyword>.+?)\})|(?P<text>.+?)").unwrap();
-
         let mut parts = Vec::new();
 
-        for caps in re.captures_iter(string) {
+        for caps in re.captures_iter(string.as_str()) {
             if let Some(keyword) = caps.name("keyword") {
                 let keyword = keyword.as_str();
                 let part = ron::de::from_str::<FormatPart>(keyword)
@@ -79,9 +54,49 @@ impl TryFrom<&str> for Format {
     }
 }
 
+impl TryFrom<&str> for Format {
+    type Error = Error;
+
+    fn try_from(string: &str) -> Result<Self, Self::Error> {
+        Self::try_from_string(string)
+    }
+}
+
+impl TryFrom<String> for Format {
+    type Error = Error;
+
+    fn try_from(string: String) -> Result<Self, Self::Error> {
+        Self::try_from_string(string)
+    }
+}
+
 impl Default for Format {
     fn default() -> Self {
         Format::try_from(DEFAULT_FORMAT).unwrap()
+    }
+}
+
+#[derive(Deserialize)]
+pub enum FormatPart {
+    Text(String),
+    Title,
+    StatusStr,
+    MatchStatus(CmusPlaybackStatus, String),
+    MaxLen(usize, Box<FormatPart>), // Inclusive
+    ProgressBar(ProgressBarConfig),
+}
+
+impl FormatPart {
+    fn is_text(&self) -> bool {
+        if let FormatPart::Text(_) = self {
+            true
+        } else {
+            false
+        }
+    }
+
+    fn is_keyword(&self) -> bool {
+        !self.is_text()
     }
 }
 

@@ -1,21 +1,21 @@
 mod builder;
 mod format;
-mod settings;
+
+pub use format::{Format, FormatPart};
 
 use super::data::prelude::*;
 use crate::error::prelude::*;
 use std::fmt;
 
+use crate::config::OutputConfig;
 use builder::CmusStatusBuilder;
-use format::{Format, FormatPart};
-use settings::Settings;
 
 const OVERFLOW_STR: &str = "...";
 
 pub struct CmusStatus {
-    data:     CmusData,
-    format:   Format,
-    settings: Settings,
+    data:   CmusData,
+    format: Format,
+    config: OutputConfig,
 }
 
 impl CmusStatus {
@@ -66,7 +66,7 @@ impl CmusStatus {
     }
 
     fn maybe_escape_html(&self, text: &str) -> String {
-        if self.settings.escape_html {
+        if self.config.escape_html {
             htmlescape::encode_minimal(text)
         } else {
             text.into()

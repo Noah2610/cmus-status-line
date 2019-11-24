@@ -8,7 +8,7 @@ const DEFAULT_FORMAT: &str = r#"
 %{MatchStatus(Paused, "")}
 %{MatchStatus(Stopped, "")} 
 %{MaxLen(30, Title)}  
-%{ProgressBar("<#->")}
+%{ProgressBar("<####---->")}
 "#;
 
 pub struct Format {

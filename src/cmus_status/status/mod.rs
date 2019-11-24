@@ -28,13 +28,12 @@ impl fmt::Display for CmusStatus {
                 .iter()
                 .map(|part| {
                     match part {
-                        FormatPart::Text(text) => text,
-                        FormatPart::Title => "TITLE",
-                        FormatPart::Artist => "ARTIST",
+                        FormatPart::Text(text) => text.to_string(),
+                        FormatPart::Title => self.data.get_title(),
                     }
                 })
-                .collect::<Vec<&str>>()
-                .join("&")
+                .collect::<Vec<String>>()
+                .join("")
         )
     }
 }

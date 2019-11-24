@@ -2,7 +2,7 @@ use crate::error::prelude::*;
 use regex::Regex;
 use std::convert::TryFrom;
 
-const DEFAULT_FORMAT: &str = "DEFAULT-%Title-MORE-%Artist";
+const DEFAULT_FORMAT: &str = "DEFAULT-%Title-MORE";
 
 pub struct Format {
     parts: Vec<FormatPart>,
@@ -18,7 +18,6 @@ impl Format {
 pub enum FormatPart {
     Text(String),
     Title,
-    Artist,
 }
 
 impl FormatPart {

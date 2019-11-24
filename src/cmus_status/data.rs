@@ -20,6 +20,17 @@ pub struct CmusData {
     settings: CmusSettings,
 }
 
+impl CmusData {
+    pub fn get_title(&self) -> String {
+        self.file
+            .file_stem()
+            .unwrap()
+            .to_str()
+            .unwrap()
+            .replace("_", " ")
+    }
+}
+
 impl TryFrom<String> for CmusData {
     type Error = Error;
 

@@ -12,12 +12,13 @@ impl CmusStatusBuilder {
         self
     }
 
-    pub fn format<T>(mut self, into_format: T) -> Self
+    pub fn format<T>(mut self, into_format: T) -> MyResult<Self>
     where
-        T: Into<Format>,
+        T: std::convert::TryInto<Format>,
+        Error: std::convert::From<<T as std::convert::TryInto<Format>>::Error>,
     {
-        self.format = Some(into_format.into());
-        self
+        self.format = Some(into_format.try_into()?);
+        Ok(self)
     }
 
     pub fn build(self) -> MyResult<CmusStatus> {

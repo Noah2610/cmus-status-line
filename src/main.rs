@@ -1,3 +1,8 @@
+extern crate regex;
+#[macro_use]
+extern crate serde;
+extern crate serde_plain;
+
 mod cmus_status;
 mod error;
 

@@ -20,6 +20,7 @@ pub enum Error {
     CmusMissingData(String),
     CmusStatusNoData,
     NoFormat,
+    InvalidFormatKeyword(String),
 }
 
 impl Error {
@@ -59,6 +60,10 @@ impl Error {
             Error::NoFormat => {
                 "No output format given for status line".to_string()
             }
+            Error::InvalidFormatKeyword(keyword) => format!(
+                "Given format keyword '{}' is not a valid keyword",
+                keyword,
+            ),
         }
     }
 }

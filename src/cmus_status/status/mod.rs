@@ -30,6 +30,9 @@ impl fmt::Display for CmusStatus {
                     match part {
                         FormatPart::Text(text) => text.to_string(),
                         FormatPart::Title => self.data.get_title(),
+                        FormatPart::StatusStr => {
+                            self.data.get_status().to_string()
+                        }
                     }
                 })
                 .collect::<Vec<String>>()

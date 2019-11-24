@@ -7,6 +7,7 @@ pub mod prelude {
 
 use crate::error::prelude::*;
 use std::convert::TryFrom;
+use std::fmt;
 use std::path::PathBuf;
 
 pub type Seconds = u32;
@@ -28,6 +29,10 @@ impl CmusData {
             .to_str()
             .unwrap()
             .replace("_", " ")
+    }
+
+    pub fn get_status(&self) -> &CmusStatus {
+        &self.status
     }
 }
 
@@ -151,6 +156,20 @@ impl TryFrom<&str> for CmusStatus {
             STATUS_STOPPED => Ok(CmusStatus::Stopped),
             s => Err(Error::CmusUnknownStatus(s.into())),
         }
+    }
+}
+
+impl fmt::Display for CmusStatus {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                CmusStatus::Playing => "Playing",
+                CmusStatus::Paused => "Paused",
+                CmusStatus::Stopped => "Stopped",
+            }
+        )
     }
 }
 

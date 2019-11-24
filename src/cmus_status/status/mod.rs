@@ -48,6 +48,10 @@ impl CmusStatus {
                     text
                 })
             }
+            FormatPart::ProgressBar(bar_config) => {
+                dbg!(&bar_config);
+                None
+            }
         }
     }
 }

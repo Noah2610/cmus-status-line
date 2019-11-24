@@ -7,7 +7,8 @@ const DEFAULT_FORMAT: &str = r#"
 %{MatchStatus(Playing, "")}
 %{MatchStatus(Paused, "")}
 %{MatchStatus(Stopped, "")} 
-%{MaxLen(30, Title)}
+%{MaxLen(30, Title)}  
+%{ProgressBar("<-#>")}
 "#;
 
 pub struct Format {
@@ -27,6 +28,7 @@ pub enum FormatPart {
     StatusStr,
     MatchStatus(CmusPlaybackStatus, String),
     MaxLen(usize, Box<FormatPart>), // Inclusive
+    ProgressBar(ProgressBarConfig),
 }
 
 impl FormatPart {
@@ -80,5 +82,33 @@ impl TryFrom<&str> for Format {
 impl Default for Format {
     fn default() -> Self {
         Format::try_from(DEFAULT_FORMAT).unwrap()
+    }
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(try_from = "String")]
+pub struct ProgressBarConfig {
+    pub start: char,
+    pub end:   char,
+    pub empty: char,
+    pub full:  char,
+}
+
+impl TryFrom<String> for ProgressBarConfig {
+    type Error = Error;
+
+    fn try_from(s: String) -> MyResult<Self> {
+        let len = s.len();
+        if len < 4 {
+            Err(Error::ProgressBarConfigMinLen(4, s))
+        } else {
+            let chars = s.chars().collect::<Vec<char>>();
+            Ok(ProgressBarConfig {
+                start: *chars.get(0).unwrap(),
+                end:   *chars.get(len - 1).unwrap(),
+                empty: *chars.get(1).unwrap(),
+                full:  *chars.get(len - 2).unwrap(),
+            })
+        }
     }
 }

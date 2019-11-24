@@ -21,6 +21,7 @@ pub enum Error {
     CmusStatusNoData,
     NoFormat,
     InvalidFormatKeyword(String),
+    ProgressBarConfigMinLen(usize, String),
 }
 
 impl Error {
@@ -63,6 +64,11 @@ impl Error {
             Error::InvalidFormatKeyword(keyword) => format!(
                 "Given format keyword '{}' is not a valid keyword",
                 keyword,
+            ),
+            Error::ProgressBarConfigMinLen(min_len, config) => format!(
+                "ProgressBar config string must be at least {} characters \
+                 long: {}",
+                min_len, config,
             ),
         }
     }

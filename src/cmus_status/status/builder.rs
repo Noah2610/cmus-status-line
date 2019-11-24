@@ -2,8 +2,9 @@ use super::*;
 
 #[derive(Default)]
 pub struct CmusStatusBuilder {
-    data:   Option<CmusData>,
-    format: Option<Format>,
+    data:     Option<CmusData>,
+    format:   Option<Format>,
+    settings: Option<Settings>,
 }
 
 impl CmusStatusBuilder {
@@ -21,10 +22,16 @@ impl CmusStatusBuilder {
         Ok(self)
     }
 
+    pub fn settings(mut self, settings: Settings) -> Self {
+        self.settings = Some(settings);
+        self
+    }
+
     pub fn build(self) -> MyResult<CmusStatus> {
         Ok(CmusStatus {
-            data:   self.data.ok_or(Error::CmusStatusNoData)?,
-            format: self.format.unwrap_or_else(Default::default),
+            data:     self.data.ok_or(Error::CmusStatusNoData)?,
+            format:   self.format.unwrap_or_else(Default::default),
+            settings: self.settings.unwrap_or_else(Default::default),
         })
     }
 }

@@ -14,8 +14,7 @@ pub type Seconds = u32;
 
 #[derive(Debug)]
 pub struct CmusData {
-    status: CmusPlaybackStatus,
-    // file /home/noah/Music/Soundtracks/Celeste/23_Official_Celeste_B-Sides_-_02_-_Ben_Prunty_-_Old_Site_Black_Moonrise_Mix.mp3
+    status:   CmusPlaybackStatus,
     file:     Option<PathBuf>,
     time:     Option<CmusTime>,
     settings: CmusSettings,
@@ -35,30 +34,16 @@ impl CmusData {
     pub fn get_status(&self) -> &CmusPlaybackStatus {
         &self.status
     }
+
+    pub fn get_time(&self) -> &Option<CmusTime> {
+        &self.time
+    }
 }
 
 impl TryFrom<String> for CmusData {
     type Error = Error;
 
     fn try_from(string: String) -> Result<Self, Self::Error> {
-        // status playing
-        // file /home/noah/Music/Soundtracks/LittleRunmo/Little_Runmo_Level_One.mp3
-        // duration 106
-        // position 72
-        // set aaa_mode artist
-        // set continue true
-        // set play_library false
-        // set play_sorted true
-        // set replaygain disabled
-        // set replaygain_limit true
-        // set replaygain_preamp 0.000000
-        // set repeat true
-        // set repeat_current false
-        // set shuffle true
-        // set softvol false
-        // set vol_left 90
-        // set vol_right 90
-
         const STATUS_NAME: &str = "status";
         const FILE_NAME: &str = "file";
         const TIME_DURATION_NAME: &str = "duration";
@@ -141,7 +126,6 @@ impl TryFrom<String> for CmusData {
     }
 }
 
-// status playing
 #[derive(Debug, PartialEq, Deserialize)]
 pub enum CmusPlaybackStatus {
     Playing,
@@ -180,26 +164,18 @@ impl fmt::Display for CmusPlaybackStatus {
     }
 }
 
-// duration 203
-// position 43
 #[derive(Debug)]
 pub struct CmusTime {
     pub duration: Seconds,
     pub position: Seconds,
 }
 
-// set aaa_mode artist
-// set continue true
-// set play_library false
-// set play_sorted true
-// set replaygain disabled
-// set replaygain_limit true
-// set replaygain_preamp 0.000000
-// set repeat true
-// set repeat_current false
-// set shuffle true
-// set softvol false
-// set vol_left 90
-// set vol_right 90
+impl CmusTime {
+    pub fn completion_percentage(&self) -> f32 {
+        self.position as f32 / self.duration as f32
+    }
+}
+
+// TODO
 #[derive(Debug)]
 pub struct CmusSettings {}

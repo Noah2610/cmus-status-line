@@ -49,8 +49,15 @@ impl CmusStatus {
                 })
             }
             FormatPart::ProgressBar(bar_config) => {
-                dbg!(&bar_config);
-                None
+                if let Some(time) = self.data.get_time() {
+                    let width = bar_config.inner_width();
+                    let percent_complete = time.completion_percentage();
+                    let characters =
+                        (width as f32 * percent_complete).round() as usize;
+                    Some(bar_config.text_with_filled(characters))
+                } else {
+                    None
+                }
             }
         }
     }

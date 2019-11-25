@@ -8,19 +8,19 @@ use crate::error::prelude::*;
 use std::fmt;
 
 use crate::config::OutputConfig;
-use builder::CmusStatusBuilder;
+use builder::StatusOutputBuilder;
 
 const OVERFLOW_STR: &str = "...";
 
-pub struct CmusStatus {
+pub struct StatusOutput {
     data:   CmusData,
     format: Format,
     config: OutputConfig,
 }
 
-impl CmusStatus {
-    pub fn builder() -> CmusStatusBuilder {
-        CmusStatusBuilder::default()
+impl StatusOutput {
+    pub fn builder() -> StatusOutputBuilder {
+        StatusOutputBuilder::default()
     }
 
     fn get_format_text(&self, part: &FormatPart) -> Option<String> {
@@ -86,7 +86,7 @@ impl CmusStatus {
     }
 }
 
-impl fmt::Display for CmusStatus {
+impl fmt::Display for StatusOutput {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(
             f,

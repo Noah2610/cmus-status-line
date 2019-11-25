@@ -1,13 +1,13 @@
 use super::*;
 
 #[derive(Default)]
-pub struct CmusStatusBuilder {
+pub struct StatusOutputBuilder {
     data:   Option<CmusData>,
     format: Option<Format>,
     config: Option<OutputConfig>,
 }
 
-impl CmusStatusBuilder {
+impl StatusOutputBuilder {
     pub fn data(mut self, data: CmusData) -> Self {
         self.data = Some(data);
         self
@@ -23,11 +23,11 @@ impl CmusStatusBuilder {
         self
     }
 
-    pub fn build(self) -> MyResult<CmusStatus> {
-        Ok(CmusStatus {
+    pub fn build(self) -> MyResult<StatusOutput> {
+        Ok(StatusOutput {
             data:   self.data.ok_or(Error::CmusStatusNoData)?,
             format: self.format.unwrap_or_else(Default::default),
-            config: self.config.unwrap_or_else(Default::default),
+            config: self.config.ok_or(Error::NoConfig)?,
         })
     }
 }

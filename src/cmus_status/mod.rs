@@ -1,12 +1,12 @@
 mod data;
-pub mod status;
+pub mod output;
 
 use crate::error::prelude::*;
 use std::convert::TryFrom;
 use std::process::Command;
 
 use data::CmusData;
-use status::CmusStatus;
+use output::StatusOutput;
 
 pub fn print_cmus_status() -> MyResult<()> {
     let cmus_status = get_cmus_status()?;
@@ -14,11 +14,11 @@ pub fn print_cmus_status() -> MyResult<()> {
     Ok(())
 }
 
-pub fn get_cmus_status() -> MyResult<CmusStatus> {
+pub fn get_cmus_status() -> MyResult<StatusOutput> {
     let output = get_cmus_remote_output()?;
     let cmus_data = CmusData::try_from(output)?;
     let config = crate::config::get_config()?;
-    CmusStatus::builder()
+    StatusOutput::builder()
         .data(cmus_data)
         .format(config.format)
         .config(config.output)

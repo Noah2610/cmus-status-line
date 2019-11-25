@@ -23,7 +23,8 @@ pub enum Error {
     NoFormat,
     InvalidFormatKeyword(String),
     ProgressBarConfigMinLen(usize, String),
-    FailedParsingConfig(PathBuf, String),
+    FailedParsingConfig(Option<PathBuf>, String),
+    NoConfig,
 }
 
 impl Error {
@@ -72,10 +73,14 @@ impl Error {
                  long: {}",
                 min_len, config,
             ),
-            Error::FailedParsingConfig(filepath, e) => format!(
+            Error::FailedParsingConfig(Some(filepath), e) => format!(
                 "failed parsing config.toml file at {:?}\n{}",
                 filepath, e
             ),
+            Error::FailedParsingConfig(None, e) => {
+                format!("failed parsing config TOML\n{}", e)
+            }
+            Error::NoConfig => "no config was given".to_string(),
         }
     }
 }

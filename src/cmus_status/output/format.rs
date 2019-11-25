@@ -59,7 +59,7 @@ impl Format {
 impl TryFrom<&str> for Format {
     type Error = Error;
 
-    fn try_from(string: &str) -> Result<Self, Self::Error> {
+    fn try_from(string: &str) -> MyResult<Self> {
         Self::try_from_string(string)
     }
 }
@@ -67,7 +67,7 @@ impl TryFrom<&str> for Format {
 impl TryFrom<String> for Format {
     type Error = Error;
 
-    fn try_from(string: String) -> Result<Self, Self::Error> {
+    fn try_from(string: String) -> MyResult<Self> {
         Self::try_from_string(string)
     }
 }

@@ -9,6 +9,7 @@ extern crate toml;
 mod cmus_status;
 mod config;
 mod error;
+mod meta;
 
 fn main() {
     match cmus_status::print_cmus_status() {

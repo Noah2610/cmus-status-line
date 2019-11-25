@@ -7,6 +7,7 @@ extern crate serde;
 extern crate toml;
 
 mod action;
+mod args;
 mod cmus_status;
 mod config;
 mod error;

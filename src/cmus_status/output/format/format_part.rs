@@ -38,7 +38,6 @@ pub enum FormatPart {
     /// The "full" characters are printed if the playback percentage of the track has reached that
     /// point, the "empty" characters if it hasn't.
     /// The total length of the string is also the printed length.
-    /// The `ProgressBar` is also never encoded with htmlescape.
     ProgressBar(ProgressBarConfig),
 }
 

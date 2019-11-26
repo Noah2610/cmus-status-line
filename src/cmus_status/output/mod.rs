@@ -57,7 +57,6 @@ impl StatusOutput {
                 })
             }
             FormatPart::ProgressBar(bar_config) => {
-                maybe_escape_html = false; // Never escape literal text
                 if let Some(time) = self.data.get_time() {
                     let width = bar_config.inner_width();
                     let percent_complete = time.completion_percentage();

@@ -10,7 +10,7 @@ use std::path::PathBuf;
 
 const DEFAULT_CONFIG: &str = include_str!("../../config.toml");
 const KEYWORD_CONFIG_DIR: &str = "<CONFIG_DIR>";
-const CONFIG_FILES: [&str; 2] = ["./config.toml", "<CONFIG_DIR>/config.toml"];
+const CONFIG_FILES: [&str; 1] = ["<CONFIG_DIR>/config.toml"];
 
 #[derive(Deserialize)]
 pub struct Config {
@@ -53,8 +53,9 @@ fn default_config() -> MyResult<Config> {
 fn get_config_file() -> Option<PathBuf> {
     CONFIG_FILES.iter().find_map(|filepath| {
         let path = if filepath.starts_with(KEYWORD_CONFIG_DIR) {
-            let filepath_without_keyword =
-                filepath.replace(KEYWORD_CONFIG_DIR, "");
+            let filepath_without_keyword = filepath
+                .replace(&format!("{}/", KEYWORD_CONFIG_DIR), "")
+                .replace(KEYWORD_CONFIG_DIR, "");
             if let Some(mut path) = get_config_dir() {
                 path.push(filepath_without_keyword);
                 path

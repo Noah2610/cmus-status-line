@@ -2,6 +2,6 @@ format = """
 %{MatchStatus(Playing, "")}
 %{MatchStatus(Paused, "")}
 %{MatchStatus(Stopped, "")} 
-%{MaxLen(60, Title)}  
+%{MaxLen(Title, 60)}  
 %{ProgressBar("<####---->")}
 """

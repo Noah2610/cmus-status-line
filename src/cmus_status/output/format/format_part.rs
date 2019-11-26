@@ -2,11 +2,43 @@ use super::*;
 
 #[derive(Deserialize)]
 pub enum FormatPart {
+    /// Just print the given text, which is never encoded with htmlescape.
     Text(String),
+
+    /// Prints the currently playing song's name.
     Title,
+
+    /// Prints the `CmusPlaybackStatus` of the playing song.
     Status,
+
+    /// If the first argument's status is the current `CmusPlaybackStatus`,
+    /// then, print the given string.
+    /// The `CmusPlaybackStatus` can be one of:
+    ///   - Playing
+    ///   - Paused
+    ///   - Stopped
     MatchStatus(CmusPlaybackStatus, String),
-    MaxLen(usize, Box<FormatPart>), // Inclusive
+
+    /// Truncate the given `FormatPart` to the given length (`usize`).
+    /// Max length is inclusive.
+    /// __Example:__
+    /// ```
+    ///     "MaxLen(Status, 60)"
+    /// ```
+    MaxLen(Box<FormatPart>, usize), // Inclusive
+
+    /// Prints a ProgressBar with the given `ProgressBarConfig`.
+    /// `ProgressBarConfig` can be a string such as:
+    /// ```
+    ///     "<###--->"
+    /// ```
+    /// ... where the first and last characters (`<,``>`) are used as the start and end
+    /// characters of the bar, respectively. The second character in the string (`#`) is used
+    /// as the "full" character, and the second to last as the "empty" (`-`) character.
+    /// The "full" characters are printed if the playback percentage of the track has reached that
+    /// point, the "empty" characters if it hasn't.
+    /// The total length of the string is also the printed length.
+    /// The `ProgressBar` is also never encoded with htmlescape.
     ProgressBar(ProgressBarConfig),
 }
 

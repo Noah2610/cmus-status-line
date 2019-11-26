@@ -12,7 +12,6 @@ pub use time::{CmusTime, Seconds};
 
 use crate::error::prelude::*;
 use std::convert::TryFrom;
-use std::fmt;
 use std::path::PathBuf;
 
 #[derive(Debug)]

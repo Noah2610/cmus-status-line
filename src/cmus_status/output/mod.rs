@@ -40,7 +40,7 @@ impl StatusOutput {
                     None
                 }
             }
-            FormatPart::MaxLen(max, part_inner) => {
+            FormatPart::MaxLen(part_inner, max) => {
                 let max = *max;
                 self.get_format_text(part_inner.as_ref()).map(|text| {
                     let mut text = text.to_string();
@@ -57,6 +57,7 @@ impl StatusOutput {
                 })
             }
             FormatPart::ProgressBar(bar_config) => {
+                maybe_escape_html = false; // Never escape literal text
                 if let Some(time) = self.data.get_time() {
                     let width = bar_config.inner_width();
                     let percent_complete = time.completion_percentage();

@@ -5,3 +5,6 @@ format = """
 %{MaxLen(Title, 60)}  
 %{ProgressBar("<####---->")}
 """
+
+[output]
+escape_html = false

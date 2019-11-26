@@ -10,7 +10,7 @@ use std::path::PathBuf;
 
 const DEFAULT_CONFIG: &str = include_str!("../../config.toml");
 const KEYWORD_CONFIG_DIR: &str = "<CONFIG_DIR>";
-const CONFIG_FILES: [&str; 1] = ["<CONFIG_DIR>/config.toml"];
+const CONFIG_FILES: [&str; 2] = ["./config.toml", "<CONFIG_DIR>/config.toml"];
 
 #[derive(Deserialize)]
 pub struct Config {

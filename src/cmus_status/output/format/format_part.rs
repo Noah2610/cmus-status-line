@@ -4,7 +4,7 @@ use super::*;
 pub enum FormatPart {
     Text(String),
     Title,
-    StatusStr,
+    Status,
     MatchStatus(CmusPlaybackStatus, String),
     MaxLen(usize, Box<FormatPart>), // Inclusive
     ProgressBar(ProgressBarConfig),

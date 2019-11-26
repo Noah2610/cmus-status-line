@@ -32,7 +32,7 @@ impl StatusOutput {
                 Some(text.to_string())
             }
             FormatPart::Title => self.data.get_title(),
-            FormatPart::StatusStr => Some(self.data.get_status().to_string()),
+            FormatPart::Status => Some(self.data.get_status().to_string()),
             FormatPart::MatchStatus(status, text) => {
                 if *status == *self.data.get_status() {
                     Some(text.to_string())

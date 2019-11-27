@@ -113,7 +113,6 @@ impl ProgressBarConfig {
 
 impl TryFrom<String> for ProgressBarConfig {
     type Error = Error;
-
     fn try_from(s: String) -> MyResult<Self> {
         let len = s.len();
         if len < 2 {

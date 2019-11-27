@@ -31,13 +31,10 @@ impl Format {
         self.parts.iter()
     }
 
-    fn try_from_string<S>(string: S) -> MyResult<Self>
-    where
-        S: ToString,
-    {
-        let string = string.to_string();
+    fn try_from_string(string: String) -> MyResult<Self> {
         let re =
-            Regex::new(r"(%\{\s*(?P<keyword>.+?)\s*\})|(?P<text>.+?)").unwrap();
+            Regex::new(r"(%\{\s*(?P<keyword>(.|\s)+?)\s*\})|(?P<text>.+?)")
+                .unwrap();
         let mut parts = Vec::new();
 
         for caps in re.captures_iter(string.as_str()) {
@@ -68,15 +65,13 @@ impl Format {
 
 impl TryFrom<&str> for Format {
     type Error = Error;
-
     fn try_from(string: &str) -> MyResult<Self> {
-        Self::try_from_string(string)
+        Self::try_from_string(string.to_string())
     }
 }
 
 impl TryFrom<String> for Format {
     type Error = Error;
-
     fn try_from(string: String) -> MyResult<Self> {
         Self::try_from_string(string)
     }

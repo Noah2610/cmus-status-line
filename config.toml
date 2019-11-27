@@ -14,7 +14,7 @@ format = """
         If(
             IsStatus(Playing),
             Container([
-                Title,
+                MaxLen(Title, 60),
                 Text("  "),
                 ProgressBar("<####---->"),
             ]),

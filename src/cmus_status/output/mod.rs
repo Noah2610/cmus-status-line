@@ -57,6 +57,7 @@ impl StatusOutput {
             }
 
             FormatPart::MaxLen(format_part_inner, max) => {
+                maybe_escape_html = false; // Never escape FormatParts which hold another FormatPart
                 let max = *max;
                 self.get_format_text(format_part_inner.as_ref())
                     .map(|text| {
@@ -86,16 +87,20 @@ impl StatusOutput {
                 }
             }
 
-            FormatPart::Container(format_parts_inner) => Some(
-                self.get_format_text_for_parts(
-                    format_parts_inner
-                        .iter()
-                        .map(std::ops::Deref::deref)
-                        .collect(),
-                ),
-            ),
+            FormatPart::Container(format_parts_inner) => {
+                maybe_escape_html = false; // Never escape FormatParts which hold another FormatPart
+                Some(
+                    self.get_format_text_for_parts(
+                        format_parts_inner
+                            .iter()
+                            .map(std::ops::Deref::deref)
+                            .collect(),
+                    ),
+                )
+            }
 
             FormatPart::If(expression, format_part_inner) => {
+                maybe_escape_html = false; // Never escape FormatParts which hold another FormatPart
                 if self.is_expression_true(expression) {
                     self.get_format_text(format_part_inner)
                 } else {

@@ -124,6 +124,8 @@ impl StatusOutput {
                     || self.is_expression_true(expr_two)
             }
 
+            FormatExpression::Not(expr) => !self.is_expression_true(expr),
+
             FormatExpression::IsStatus(playback_status) => {
                 self.data.is_status(&playback_status)
             }

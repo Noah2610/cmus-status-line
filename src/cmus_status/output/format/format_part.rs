@@ -94,6 +94,8 @@ pub enum FormatExpression {
     And(Box<FormatExpression>, Box<FormatExpression>),
     /// Returns `true` if either of the given expressions are `true`.
     Or(Box<FormatExpression>, Box<FormatExpression>),
+    /// Inverts the given expression.
+    Not(Box<FormatExpression>),
     /// Returns `true` if the given `CmusPlaybackStatus`
     /// is the currently playing's song `CmusPlaybackStatus`.
     IsStatus(CmusPlaybackStatus),

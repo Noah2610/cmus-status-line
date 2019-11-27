@@ -1,9 +1,6 @@
 format = """
 %{ If(
-    And(And(
-        Not(IsStatus(Paused)),
-        Or(IsStatus(Playing), IsStatus(Stopped)),
-    ), True),
+    Or(IsStatus(Playing), IsStatus(Paused)),
     Container([
         Container([
             If(IsStatus(Playing),
@@ -13,10 +10,25 @@ format = """
             If(IsStatus(Stopped),
                 Text(" ")),
         ]),
-        Title,
-        Text("  "),
-        ProgressBar("<####---->"),
-    ])
+
+        If(
+            IsStatus(Playing),
+            Container([
+                Title,
+                Text("  "),
+                ProgressBar("<####---->"),
+            ]),
+        ),
+
+        If(
+            IsStatus(Paused),
+            Container([
+                MaxLen(Title, 10),
+                Text(" "),
+                ProgressBar("<##->"),
+            ]),
+        ),
+    ]),
 )}
 """
 

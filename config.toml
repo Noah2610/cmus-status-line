@@ -1,6 +1,9 @@
 format = """
 %{ If(
-    Not(IsStatus(Stopped)),
+    And(And(
+        Not(IsStatus(Paused)),
+        Or(IsStatus(Playing), IsStatus(Stopped)),
+    ), True),
     Container([
         Container([
             If(IsStatus(Playing),

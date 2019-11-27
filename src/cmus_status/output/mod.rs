@@ -114,6 +114,9 @@ impl StatusOutput {
 
     fn is_expression_true(&self, expression: &FormatExpression) -> bool {
         match expression {
+            FormatExpression::True => true,
+            FormatExpression::False => false,
+
             FormatExpression::And(expr_one, expr_two) => {
                 self.is_expression_true(expr_one)
                     && self.is_expression_true(expr_two)

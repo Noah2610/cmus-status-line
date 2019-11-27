@@ -30,9 +30,9 @@ pub enum FormatPart {
     /// Max length is inclusive.
     /// __Config example:__
     /// ```toml
-    ///     format = "%{ MaxLen(Status, 60) }"
+    ///     format = "%{ Truncate(Status, 60) }"
     /// ```
-    MaxLen(Box<FormatPart>, usize), // Inclusive
+    Truncate(Box<FormatPart>, usize), // Inclusive
 
     /// Prints a ProgressBar with the given `ProgressBarConfig`.
     /// `ProgressBarConfig` can be a string such as:

@@ -56,7 +56,7 @@ impl StatusOutput {
                 }
             }
 
-            FormatPart::MaxLen(format_part_inner, max) => {
+            FormatPart::Truncate(format_part_inner, max) => {
                 maybe_escape_html = false; // Never escape FormatParts which hold another FormatPart
                 let max = *max;
                 self.get_format_text(format_part_inner.as_ref())

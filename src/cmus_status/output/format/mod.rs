@@ -12,13 +12,7 @@ use crate::error::prelude::*;
 use regex::Regex;
 use std::convert::TryFrom;
 
-const DEFAULT_FORMAT: &str = r#"
-%{MatchStatus(Playing, "")}
-%{MatchStatus(Paused, "")}
-%{MatchStatus(Stopped, "")} 
-%{MaxLen(60, Title)}  
-%{ProgressBar("<####---->")}
-"#;
+const DEFAULT_FORMAT: &str = r#"NO FORMAT"#;
 
 #[derive(Deserialize)]
 #[serde(default, try_from = "String")]

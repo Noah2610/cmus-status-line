@@ -36,7 +36,8 @@ impl Format {
         S: ToString,
     {
         let string = string.to_string();
-        let re = Regex::new(r"(%\{(?P<keyword>.+?)\})|(?P<text>.+?)").unwrap();
+        let re =
+            Regex::new(r"(%\{\s*(?P<keyword>.+?)\s*\})|(?P<text>.+?)").unwrap();
         let mut parts = Vec::new();
 
         for caps in re.captures_iter(string.as_str()) {

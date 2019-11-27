@@ -40,8 +40,10 @@ impl Format {
         for caps in re.captures_iter(string.as_str()) {
             if let Some(keyword) = caps.name("keyword") {
                 let keyword = keyword.as_str();
-                let part = ron::de::from_str::<FormatPart>(keyword)
-                    .or(Err(Error::InvalidFormatKeyword(keyword.into())))?;
+                let part =
+                    ron::de::from_str::<FormatPart>(keyword).or_else(|e| {
+                        Err(Error::FailedParsingConfig(None, format!("{}", e)))
+                    })?;
                 parts.push(part);
             }
             if let Some(text) = caps.name("text") {

@@ -3,6 +3,11 @@ use super::*;
 #[derive(Deserialize)]
 pub enum FormatPart {
     /// Just print the given text, which is never encoded with htmlescape.
+    /// This whole variant can be represented as a string.
+    /// __Config example:__
+    /// ```toml
+    ///     format = "Hello from the status-line!"
+    /// ```
     Text(String),
 
     /// Prints the currently playing song's name.
@@ -11,6 +16,7 @@ pub enum FormatPart {
     /// Prints the `CmusPlaybackStatus` of the playing song.
     Status,
 
+    /// TODO: Deprecated, use with `FormatPart::If` conditional.
     /// If the first argument's status is the current `CmusPlaybackStatus`,
     /// then, print the given string.
     /// The `CmusPlaybackStatus` can be one of:
@@ -21,16 +27,19 @@ pub enum FormatPart {
 
     /// Truncate the given `FormatPart` to the given length (`usize`).
     /// Max length is inclusive.
-    /// __Example:__
-    /// ```
-    ///     "MaxLen(Status, 60)"
+    /// __Config example:__
+    /// ```toml
+    ///     format = "%{ MaxLen(Status, 60) }"
     /// ```
     MaxLen(Box<FormatPart>, usize), // Inclusive
 
     /// Prints a ProgressBar with the given `ProgressBarConfig`.
     /// `ProgressBarConfig` can be a string such as:
-    /// ```
-    ///     "<###--->"
+    /// __Config example:__
+    /// ```toml
+    ///     format = """
+    ///     %{ ProgressBar("<###--->") }
+    ///     """
     /// ```
     /// ... where the first and last characters (`<,``>`) are used as the start and end
     /// characters of the bar, respectively. The second character in the string (`#`) is used
@@ -39,6 +48,29 @@ pub enum FormatPart {
     /// point, the "empty" characters if it hasn't.
     /// The total length of the string is also the printed length.
     ProgressBar(ProgressBarConfig),
+
+    /// TODO: Documentation
+    /// A list of `FormatPart`s.
+    /// Useful with `FormatPart::If`.
+    // Block(Vec<Box<FormatPart>>),
+
+    /// `If` conditional. If the `FormatExpression` returns `true`,
+    /// then `FormatPart` is printed.
+    /// __Config example:__
+    /// ```toml
+    ///     format = """
+    ///     %{ If(IsStatus(Playing),
+    ///        "Cmus is playing a song!") }
+    ///     """
+    /// ```
+    If(FormatExpression, Box<FormatPart>),
+}
+
+#[derive(Deserialize)]
+pub enum FormatExpression {
+    /// Returns `true` if the given `CmusPlaybackStatus`
+    /// is the currently playing's song `CmusPlaybackStatus`.
+    IsStatus(CmusPlaybackStatus),
 }
 
 #[derive(Deserialize, Debug)]

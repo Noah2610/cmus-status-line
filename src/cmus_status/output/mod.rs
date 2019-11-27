@@ -1,7 +1,7 @@
 mod builder;
 mod format;
 
-pub use format::{Format, FormatPart};
+pub use format::prelude::*;
 
 use super::data::prelude::*;
 use crate::error::prelude::*;
@@ -31,31 +31,38 @@ impl StatusOutput {
                 maybe_escape_html = false; // Never escape literal text
                 Some(text.to_string())
             }
+
             FormatPart::Title => self.data.get_title(),
+
             FormatPart::Status => Some(self.data.get_status().to_string()),
-            FormatPart::MatchStatus(status, text) => {
-                if *status == *self.data.get_status() {
+
+            // TODO: Deprecated
+            FormatPart::MatchStatus(playback_status, text) => {
+                if self.data.is_status(playback_status) {
                     Some(text.to_string())
                 } else {
                     None
                 }
             }
-            FormatPart::MaxLen(part_inner, max) => {
+
+            FormatPart::MaxLen(format_part_inner, max) => {
                 let max = *max;
-                self.get_format_text(part_inner.as_ref()).map(|text| {
-                    let mut text = text.to_string();
-                    if text.len() > max {
-                        let overflow_str_len = OVERFLOW_STR.len();
-                        if max >= overflow_str_len * 2 {
-                            text.truncate(max - overflow_str_len);
-                            text.push_str(OVERFLOW_STR);
-                        } else {
-                            text.truncate(max);
+                self.get_format_text(format_part_inner.as_ref())
+                    .map(|text| {
+                        let mut text = text.to_string();
+                        if text.len() > max {
+                            let overflow_str_len = OVERFLOW_STR.len();
+                            if max >= overflow_str_len * 2 {
+                                text.truncate(max - overflow_str_len);
+                                text.push_str(OVERFLOW_STR);
+                            } else {
+                                text.truncate(max);
+                            }
                         }
-                    }
-                    text
-                })
+                        text
+                    })
             }
+
             FormatPart::ProgressBar(bar_config) => {
                 if let Some(time) = self.data.get_time() {
                     let width = bar_config.inner_width();
@@ -67,6 +74,16 @@ impl StatusOutput {
                     None
                 }
             }
+
+            FormatPart::If(expression, format_part_inner) => match expression {
+                FormatExpression::IsStatus(playback_status) => {
+                    if self.data.is_status(playback_status) {
+                        self.get_format_text(format_part_inner)
+                    } else {
+                        None
+                    }
+                }
+            },
         }
         .map(|s| {
             if maybe_escape_html {

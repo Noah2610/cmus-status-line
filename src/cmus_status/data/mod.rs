@@ -37,6 +37,10 @@ impl CmusData {
         &self.status
     }
 
+    pub fn is_status(&self, other_status: &CmusPlaybackStatus) -> bool {
+        &self.status == other_status
+    }
+
     pub fn get_time(&self) -> &Option<CmusTime> {
         &self.time
     }

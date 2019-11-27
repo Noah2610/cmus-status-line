@@ -1,6 +1,11 @@
 mod format_part;
 
-pub use format_part::FormatPart;
+pub mod prelude {
+    pub use super::format_part::{FormatExpression, FormatPart};
+    pub use super::Format;
+}
+
+pub use prelude::*;
 
 use super::*;
 use crate::error::prelude::*;

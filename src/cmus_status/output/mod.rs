@@ -95,15 +95,13 @@ impl StatusOutput {
                 ),
             ),
 
-            FormatPart::If(expression, format_part_inner) => match expression {
-                FormatExpression::IsStatus(playback_status) => {
-                    if self.data.is_status(playback_status) {
-                        self.get_format_text(format_part_inner)
-                    } else {
-                        None
-                    }
+            FormatPart::If(expression, format_part_inner) => {
+                if self.is_expression_true(expression) {
+                    self.get_format_text(format_part_inner)
+                } else {
+                    None
                 }
-            },
+            }
         }
         .map(|s| {
             if maybe_escape_html {
@@ -112,6 +110,24 @@ impl StatusOutput {
                 s
             }
         })
+    }
+
+    fn is_expression_true(&self, expression: &FormatExpression) -> bool {
+        match expression {
+            FormatExpression::And(expr_one, expr_two) => {
+                self.is_expression_true(expr_one)
+                    && self.is_expression_true(expr_two)
+            }
+
+            FormatExpression::Or(expr_one, expr_two) => {
+                self.is_expression_true(expr_one)
+                    || self.is_expression_true(expr_two)
+            }
+
+            FormatExpression::IsStatus(playback_status) => {
+                self.data.is_status(&playback_status)
+            }
+        }
     }
 
     fn maybe_escape_html(&self, text: &str) -> String {

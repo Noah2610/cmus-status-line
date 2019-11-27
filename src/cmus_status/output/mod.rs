@@ -23,6 +23,17 @@ impl StatusOutput {
         StatusOutputBuilder::default()
     }
 
+    fn get_format_text_for_parts<'a>(
+        &self,
+        parts: Vec<&'a FormatPart>,
+    ) -> String {
+        parts
+            .iter()
+            .filter_map(|part| self.get_format_text(part))
+            .collect::<Vec<String>>()
+            .join("")
+    }
+
     fn get_format_text(&self, part: &FormatPart) -> Option<String> {
         let mut maybe_escape_html = true;
 
@@ -75,6 +86,15 @@ impl StatusOutput {
                 }
             }
 
+            FormatPart::Container(format_parts_inner) => Some(
+                self.get_format_text_for_parts(
+                    format_parts_inner
+                        .iter()
+                        .map(std::ops::Deref::deref)
+                        .collect(),
+                ),
+            ),
+
             FormatPart::If(expression, format_part_inner) => match expression {
                 FormatExpression::IsStatus(playback_status) => {
                     if self.data.is_status(playback_status) {
@@ -108,12 +128,7 @@ impl fmt::Display for StatusOutput {
         write!(
             f,
             "{}",
-            self.format
-                .iter()
-                .filter_map(|part| self.get_format_text(part))
-                .collect::<Vec<String>>()
-                .join("")
-                .as_str()
+            self.get_format_text_for_parts(self.format.iter().collect())
         )
     }
 }

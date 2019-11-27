@@ -1,14 +1,19 @@
 format = """
 %{ If(IsStatus(Playing),
-    Text("Cmus is playing a song!")) }
-
-%{MatchStatus(Playing, "")}
-%{MatchStatus(Paused, "")}
-%{MatchStatus(Stopped, "")} 
-%{ If(IsStatus(Playing),
-    MaxLen(Title, 60))
-}  
-%{ProgressBar("<####---->")}
+    Container([
+        Container([
+            If(IsStatus(Playing),
+                Text(" ")),
+            If(IsStatus(Paused),
+                Text(" ")),
+            If(IsStatus(Stopped),
+                Text(" ")),
+        ]),
+        Title,
+        Text("  "),
+        ProgressBar("<####---->"),
+    ])
+)}
 """
 
 [output]

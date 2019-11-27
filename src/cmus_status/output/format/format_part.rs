@@ -1,4 +1,5 @@
 use super::*;
+use std::convert::From;
 
 #[derive(Deserialize)]
 pub enum FormatPart {
@@ -49,10 +50,19 @@ pub enum FormatPart {
     /// The total length of the string is also the printed length.
     ProgressBar(ProgressBarConfig),
 
-    /// TODO: Documentation
     /// A list of `FormatPart`s.
     /// Useful with `FormatPart::If`.
-    // Block(Vec<Box<FormatPart>>),
+    /// __Config example:__
+    /// ```toml
+    ///     format = """
+    ///     %{ Container([
+    ///         Text("Hello "),
+    ///         Text("World! "),
+    ///         Status,
+    ///     ]) }
+    ///     """
+    /// ```
+    Container(Vec<Box<FormatPart>>),
 
     /// `If` conditional. If the `FormatExpression` returns `true`,
     /// then `FormatPart` is printed.
@@ -64,6 +74,18 @@ pub enum FormatPart {
     ///     """
     /// ```
     If(FormatExpression, Box<FormatPart>),
+}
+
+impl From<Box<FormatPart>> for FormatPart {
+    fn from(b: Box<FormatPart>) -> Self {
+        *b
+    }
+}
+
+impl<'a> From<Box<&'a FormatPart>> for &'a FormatPart {
+    fn from(b: Box<&'a FormatPart>) -> Self {
+        *b
+    }
 }
 
 #[derive(Deserialize)]

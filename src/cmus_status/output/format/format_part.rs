@@ -3,7 +3,7 @@ use std::convert::From;
 
 #[derive(Deserialize)]
 pub enum FormatPart {
-    /// Just print the given text, which is never encoded with htmlescape.
+    /// Just print the given text.
     /// This whole variant can be represented as a string.
     /// __Config example:__
     /// ```toml
@@ -33,6 +33,10 @@ pub enum FormatPart {
     ///     format = "%{ Truncate(Status, 60) }"
     /// ```
     Truncate(Box<FormatPart>, usize), // Inclusive
+
+    /// Run `htmlescape::encode_minimal` on the wrapped
+    /// `FormatPart`'s resulting string.
+    HtmlEscape(Box<FormatPart>),
 
     /// Prints a ProgressBar with the given `ProgressBarConfig`.
     /// `ProgressBarConfig` can be a string such as:

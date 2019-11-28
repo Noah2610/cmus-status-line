@@ -1,7 +1,3 @@
-mod output_config;
-
-pub use output_config::OutputConfig;
-
 use crate::cmus_status::output::Format;
 use crate::error::prelude::*;
 use std::fs::File;
@@ -15,8 +11,6 @@ const CONFIG_FILES: [&str; 2] = ["./config.toml", "<CONFIG_DIR>/config.toml"];
 #[derive(Deserialize)]
 pub struct Config {
     pub format: Format,
-    #[serde(default)]
-    pub output: OutputConfig,
 }
 
 impl Config {

@@ -7,7 +7,6 @@ use super::data::prelude::*;
 use crate::error::prelude::*;
 use std::fmt;
 
-use crate::config::OutputConfig;
 use builder::StatusOutputBuilder;
 
 const OVERFLOW_STR: &str = "...";
@@ -15,7 +14,6 @@ const OVERFLOW_STR: &str = "...";
 pub struct StatusOutput {
     data:   CmusData,
     format: Format,
-    config: OutputConfig,
 }
 
 impl StatusOutput {
@@ -35,13 +33,8 @@ impl StatusOutput {
     }
 
     fn get_format_text(&self, part: &FormatPart) -> Option<String> {
-        let mut maybe_escape_html = true;
-
         match part {
-            FormatPart::Text(text) => {
-                maybe_escape_html = false; // Never escape literal text
-                Some(text.to_string())
-            }
+            FormatPart::Text(text) => Some(text.to_string()),
 
             FormatPart::Title => self.data.get_title(),
 
@@ -57,7 +50,6 @@ impl StatusOutput {
             }
 
             FormatPart::Truncate(format_part_inner, max) => {
-                maybe_escape_html = false; // Never escape FormatParts which hold another FormatPart
                 let max = *max;
                 self.get_format_text(format_part_inner.as_ref())
                     .map(|text| {
@@ -75,6 +67,10 @@ impl StatusOutput {
                     })
             }
 
+            FormatPart::HtmlEscape(format_part_inner) => self
+                .get_format_text(format_part_inner.as_ref())
+                .map(|text| htmlescape::encode_minimal(text.as_str())),
+
             FormatPart::ProgressBar(bar_config) => {
                 if let Some(time) = self.data.get_time() {
                     let width = bar_config.inner_width();
@@ -87,20 +83,16 @@ impl StatusOutput {
                 }
             }
 
-            FormatPart::Container(format_parts_inner) => {
-                maybe_escape_html = false; // Never escape FormatParts which hold another FormatPart
-                Some(
-                    self.get_format_text_for_parts(
-                        format_parts_inner
-                            .iter()
-                            .map(std::ops::Deref::deref)
-                            .collect(),
-                    ),
-                )
-            }
+            FormatPart::Container(format_parts_inner) => Some(
+                self.get_format_text_for_parts(
+                    format_parts_inner
+                        .iter()
+                        .map(std::ops::Deref::deref)
+                        .collect(),
+                ),
+            ),
 
             FormatPart::If(expression, format_part_inner) => {
-                maybe_escape_html = false; // Never escape FormatParts which hold another FormatPart
                 if self.is_expression_true(expression) {
                     self.get_format_text(format_part_inner)
                 } else {
@@ -108,13 +100,6 @@ impl StatusOutput {
                 }
             }
         }
-        .map(|s| {
-            if maybe_escape_html {
-                self.maybe_escape_html(s.as_str())
-            } else {
-                s
-            }
-        })
     }
 
     fn is_expression_true(&self, expression: &FormatExpression) -> bool {
@@ -137,14 +122,6 @@ impl StatusOutput {
             FormatExpression::IsStatus(playback_status) => {
                 self.data.is_status(&playback_status)
             }
-        }
-    }
-
-    fn maybe_escape_html(&self, text: &str) -> String {
-        if self.config.escape_html {
-            htmlescape::encode_minimal(text)
-        } else {
-            text.into()
         }
     }
 }

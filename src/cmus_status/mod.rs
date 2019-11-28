@@ -21,7 +21,6 @@ pub fn get_cmus_status() -> MyResult<StatusOutput> {
     StatusOutput::builder()
         .data(cmus_data)
         .format(config.format)
-        .config(config.output)
         .build()
 }
 

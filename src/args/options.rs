@@ -6,6 +6,10 @@ use std::convert::TryFrom;
 pub struct CliOptions(pub(super) Vec<CliOption>);
 
 impl CliOptions {
+    pub fn iter(&self) -> std::slice::Iter<CliOption> {
+        self.0.iter()
+    }
+
     pub fn has(&self, option: &CliOption) -> bool {
         self.0.iter().any(|opt| opt == option)
     }

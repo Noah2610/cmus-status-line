@@ -20,7 +20,7 @@ impl Default for Action {
 pub fn action() -> MyResult<Action> {
     let args = Args::new()?;
 
-    let action = args
+    let mut action_opt = args
         .commands
         .iter()
         .try_fold((None, 0), |(_, cmd_index), cmd| {
@@ -45,8 +45,15 @@ pub fn action() -> MyResult<Action> {
                 Err(e) => Err(e),
             }
         })?
-        .0
-        .unwrap_or_else(Action::default);
+        .0;
 
-    Ok(action)
+    if action_opt.is_none() {
+        action_opt = if args.options.has(&CliOption::Help) {
+            Some(Action::Help)
+        } else {
+            None
+        };
+    }
+
+    Ok(action_opt.unwrap_or_else(Action::default))
 }

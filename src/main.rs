@@ -38,5 +38,5 @@ fn run() -> error::MyResult<()> {
 }
 
 fn print_help() {
-    unimplemented!()
+    println!("{} USAGE\nTODO", meta::NAME);
 }

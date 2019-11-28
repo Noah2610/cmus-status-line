@@ -67,6 +67,26 @@ mod argument_types {
         }
     }
 
+    impl TryFrom<&str> for CliCommand {
+        type Error = ();
+        fn try_from(s: &str) -> Result<Self, Self::Error> {
+            let re = Regex::new(r#"^\s*(?P<name>\w+\S*)\s*$"#).unwrap();
+            if let Some(name) = re
+                .captures(s)
+                .and_then(|caps| caps.name("name"))
+                .map(|m| m.as_str())
+            {
+                match name {
+                    names::CMD_STATUS => Ok(CliCommand::Status),
+                    names::CMD_HELP => Ok(CliCommand::Help),
+                    _ => Err(()),
+                }
+            } else {
+                Err(())
+            }
+        }
+    }
+
     #[derive(Default)]
     pub struct CliCommands(pub(super) Vec<CliCommand>);
 
@@ -83,30 +103,6 @@ mod argument_types {
                 .map(CliCommand::name)
                 .collect::<Vec<&str>>()
                 .join(" ")
-        }
-    }
-
-    impl TryFrom<&str> for CliCommand {
-        type Error = ();
-        fn try_from(s: &str) -> Result<Self, Self::Error> {
-            let re = Regex::new(r#"^\s*(?P<name>\w+\S*)\s*$"#).unwrap();
-            if re.captures_len() == 1 {
-                if let Some(name) = re
-                    .captures(s)
-                    .and_then(|caps| caps.name("name"))
-                    .map(|m| m.as_str())
-                {
-                    match name {
-                        names::CMD_STATUS => Ok(CliCommand::Status),
-                        names::CMD_HELP => Ok(CliCommand::Help),
-                        _ => Err(()),
-                    }
-                } else {
-                    Err(())
-                }
-            } else {
-                Err(())
-            }
         }
     }
 
@@ -133,31 +129,23 @@ mod argument_types {
         type Error = ();
         fn try_from(s: &str) -> Result<Self, Self::Error> {
             let re =
-                Regex::new(r#"^\s*(?P<name_with_dashes>--?\S+)\s*$"#).unwrap();
-            let re_double = Regex::new(r#"^--(?P<name>\S+)"#).unwrap();
-            if re.captures_len() == 1 {
-                if let Some(name_with_dashes) = re
-                    .captures(s)
-                    .and_then(|caps| caps.name("name_with_dashes"))
-                    .map(|m| m.as_str())
-                {
-                    // DOUBLE
-                    if let Some(name) = re_double
-                        .captures(name_with_dashes)
-                        .and_then(|caps| caps.name("name"))
-                        .map(|m| m.as_str())
-                    {
-                        match name {
+                Regex::new(r#"^\s*(?P<dashes>--?)(?P<name>\S+)\s*$"#).unwrap();
+            // let re_double = Regex::new(r#"^--(?P<name>\S+)"#).unwrap();
+            if let Some(caps) = re.captures(s) {
+                if let Some(name) = caps.name("name").map(|m| m.as_str()) {
+                    let dashes = caps.name("dashes").ok_or(())?.as_str().len();
+
+                    match dashes {
+                        // DOUBLE
+                        2 => match name {
                             names::OPT_DOUBLE_HELP => {
                                 Ok(vec![CliOption::Help].into())
                             }
                             _ => Err(()),
-                        }
-                    } else {
+                        },
                         // SINGLE
-                        Ok(name_with_dashes
+                        1 => Ok(name
                             .chars()
-                            .skip(1)
                             .try_fold(Vec::new(), |mut opts, c| match c {
                                 names::OPT_SINGLE_HELP => {
                                     opts.push(CliOption::Help);
@@ -165,7 +153,8 @@ mod argument_types {
                                 }
                                 _ => Err(()),
                             })?
-                            .into())
+                            .into()),
+                        _ => Err(()),
                     }
                 } else {
                     Err(())

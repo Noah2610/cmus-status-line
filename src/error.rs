@@ -25,6 +25,7 @@ pub enum Error {
     ProgressBarConfigMinLen(usize, String),
     FailedParsingConfig(Option<PathBuf>, String),
     NoConfig,
+    InvalidArgument(String),
 }
 
 impl Error {
@@ -81,6 +82,9 @@ impl Error {
                 format!("failed parsing config TOML\n{}", e)
             }
             Error::NoConfig => "no config was given".to_string(),
+            Error::InvalidArgument(arg) => {
+                format!("invalid argument '{}'", arg)
+            }
         }
     }
 }

@@ -23,9 +23,9 @@ fn main() {
 fn run() -> error::MyResult<()> {
     use action::prelude::*;
 
-    match action() {
-        Action::PrintStatus => cmus_status::print_cmus_status(),
-        Action::PrintAbout => {
+    match action()? {
+        Action::Status => cmus_status::print_cmus_status(),
+        Action::About => {
             print_about();
             Ok(())
         }

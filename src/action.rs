@@ -27,7 +27,13 @@ pub fn action() -> MyResult<Action> {
             let act_or_err: MyResult<Action> = match cmd {
                 CliCommand::Status => {
                     if cmd_index == 0 {
-                        Ok(Action::Status)
+                        if args.options.is_empty() {
+                            Ok(Action::Status)
+                        } else {
+                            Err(Error::CommandTakesNoOptions(
+                                cmd.name().to_string(),
+                            ))
+                        }
                     } else {
                         Err(Error::InvalidCommandLen(args.commands.to_string()))
                     }

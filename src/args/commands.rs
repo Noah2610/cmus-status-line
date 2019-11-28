@@ -27,7 +27,7 @@ pub enum CliCommand {
 }
 
 impl CliCommand {
-    fn name(&self) -> &str {
+    pub fn name(&self) -> &str {
         match self {
             CliCommand::Status => names::CMD_STATUS,
             CliCommand::Help => names::CMD_HELP,

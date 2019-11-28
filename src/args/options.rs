@@ -5,6 +5,16 @@ use std::convert::TryFrom;
 #[derive(Default)]
 pub struct CliOptions(pub(super) Vec<CliOption>);
 
+impl CliOptions {
+    pub fn has(&self, option: &CliOption) -> bool {
+        self.0.iter().any(|opt| opt == option)
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.0.is_empty()
+    }
+}
+
 impl Into<Vec<CliOption>> for CliOptions {
     fn into(self) -> Vec<CliOption> {
         self.0
@@ -55,6 +65,7 @@ impl TryFrom<&str> for CliOptions {
     }
 }
 
+#[derive(PartialEq)]
 pub enum CliOption {
     Help,
 }

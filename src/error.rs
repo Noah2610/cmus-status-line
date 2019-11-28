@@ -27,6 +27,8 @@ pub enum Error {
     NoConfig,
     InvalidArgument(String),
     InvalidCommandLen(String),
+    InvalidCommandOption(String, String),
+    CommandTakesNoOptions(String),
 }
 
 impl Error {
@@ -88,6 +90,12 @@ impl Error {
             }
             Error::InvalidCommandLen(arg) => {
                 format!("invalid command arguments '{}'", arg)
+            }
+            Error::InvalidCommandOption(cmd, opt) => {
+                format!("invalid option '{}' for command '{}'", opt, cmd)
+            }
+            Error::CommandTakesNoOptions(cmd) => {
+                format!("command '{}' takes no options", cmd)
             }
         }
     }

@@ -14,9 +14,14 @@ mod error;
 mod meta;
 
 fn main() {
+    use std::process;
+
     match run() {
         Ok(_) => (),
-        Err(e) => panic!("{}", e),
+        Err(e) => {
+            eprintln!("{}", e);
+            process::exit(1);
+        }
     }
 }
 
@@ -25,13 +30,13 @@ fn run() -> error::MyResult<()> {
 
     match action()? {
         Action::Status => cmus_status::print_cmus_status(),
-        Action::About => {
-            print_about();
+        Action::Help => {
+            print_help();
             Ok(())
         }
     }
 }
 
-fn print_about() {
+fn print_help() {
     unimplemented!()
 }

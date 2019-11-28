@@ -8,7 +8,7 @@ pub mod prelude {
 
 pub enum Action {
     Status,
-    About,
+    Help,
 }
 
 impl Default for Action {
@@ -20,5 +20,27 @@ impl Default for Action {
 pub fn action() -> MyResult<Action> {
     let args = Args::new()?;
 
-    Ok(Action::default())
+    let action = args
+        .commands
+        .iter()
+        .try_fold((None, 0), |(_, cmd_index), cmd| {
+            let act_or_err: MyResult<Action> = match cmd {
+                CliCommand::Status => {
+                    if cmd_index == 0 {
+                        Ok(Action::Status)
+                    } else {
+                        Err(Error::InvalidCommandLen(args.commands.to_string()))
+                    }
+                }
+                CliCommand::Help => Ok(Action::Help),
+            };
+            match act_or_err {
+                Ok(act) => Ok((Some(act), cmd_index + 1)),
+                Err(e) => Err(e),
+            }
+        })?
+        .0
+        .unwrap_or_else(Action::default);
+
+    Ok(action)
 }

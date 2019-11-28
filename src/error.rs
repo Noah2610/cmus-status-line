@@ -26,6 +26,7 @@ pub enum Error {
     FailedParsingConfig(Option<PathBuf>, String),
     NoConfig,
     InvalidArgument(String),
+    InvalidCommandLen(String),
 }
 
 impl Error {
@@ -84,6 +85,9 @@ impl Error {
             Error::NoConfig => "no config was given".to_string(),
             Error::InvalidArgument(arg) => {
                 format!("invalid argument '{}'", arg)
+            }
+            Error::InvalidCommandLen(arg) => {
+                format!("invalid command arguments '{}'", arg)
             }
         }
     }

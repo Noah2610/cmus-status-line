@@ -1,7 +1,9 @@
 pub mod prelude {
     pub use super::Args;
     pub use super::CliCommand;
+    pub use super::CliCommands;
     pub use super::CliOption;
+    pub use super::CliOptions;
 }
 
 mod names {
@@ -12,29 +14,28 @@ mod names {
     pub(super) const OPT_SINGLE_HELP: char = 'h';
 }
 
-pub use argument_types::{CliCommand, CliOption};
+pub use argument_types::{CliCommand, CliCommands, CliOption, CliOptions};
 
 use crate::error::prelude::*;
-use argument_types::CliOptions;
 use std::convert::TryFrom;
 use std::env;
 
 pub struct Args {
-    commands: Vec<CliCommand>,
-    options:  Vec<CliOption>,
+    pub commands: CliCommands,
+    pub options:  CliOptions,
 }
 
 impl Args {
     pub fn new() -> MyResult<Self> {
         let (commands, options) = env::args().skip(1).try_fold(
-            (Vec::<CliCommand>::new(), Vec::<CliOption>::new()),
+            (CliCommands::default(), CliOptions::default()),
             |(mut commands, mut options), arg| {
-                if let Ok(mut opts) = CliOptions::try_from(arg.as_str()) {
-                    options.append(&mut opts.into());
+                if let Ok(opts) = CliOptions::try_from(arg.as_str()) {
+                    options.0.append(&mut opts.into());
                     Ok((commands, options))
                 } else {
                     if let Ok(cmd) = CliCommand::try_from(arg.as_str()) {
-                        commands.push(cmd);
+                        commands.0.push(cmd);
                         Ok((commands, options))
                     } else {
                         Err(Error::InvalidArgument(arg))
@@ -55,6 +56,34 @@ mod argument_types {
     pub enum CliCommand {
         Status,
         Help,
+    }
+
+    impl CliCommand {
+        fn name(&self) -> &str {
+            match self {
+                CliCommand::Status => names::CMD_STATUS,
+                CliCommand::Help => names::CMD_HELP,
+            }
+        }
+    }
+
+    #[derive(Default)]
+    pub struct CliCommands(pub(super) Vec<CliCommand>);
+
+    impl CliCommands {
+        pub fn iter(&self) -> std::slice::Iter<CliCommand> {
+            self.0.iter()
+        }
+    }
+
+    impl ToString for CliCommands {
+        fn to_string(&self) -> String {
+            self.0
+                .iter()
+                .map(CliCommand::name)
+                .collect::<Vec<&str>>()
+                .join(" ")
+        }
     }
 
     impl TryFrom<&str> for CliCommand {
@@ -85,7 +114,8 @@ mod argument_types {
         Help,
     }
 
-    pub(super) struct CliOptions(Vec<CliOption>);
+    #[derive(Default)]
+    pub struct CliOptions(pub(super) Vec<CliOption>);
 
     impl Into<Vec<CliOption>> for CliOptions {
         fn into(self) -> Vec<CliOption> {

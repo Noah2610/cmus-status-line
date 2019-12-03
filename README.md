@@ -1,4 +1,21 @@
 # cmus-status-line
+<details>
+<summary>
+    Table of Contents
+</summary>
+
+- [Description](#description)
+- [Installation](#installation)
+  - [Binaries](#binaries)
+  - [Install from [crates.io]](#install-from-cratesio)
+- [Usage](#usage)
+- [Configuration](#configuration)
+  - [`FormatPart`](#formatpart)
+  - [`FormatExpression`](#formatexpression)
+
+---
+</details>
+
 ## Description
 Prints the current `cmus` playback status in a customizable format to stdout.
 
@@ -75,7 +92,7 @@ cmus-status-line dump-config > ~/.config/cmus-status-line/config.toml
 The configuration has a `format` key, which is a string.  
 <details>
 <summary>
-The default format string looks like this:
+    The default format string looks like this:
 </summary>
 
 ```
@@ -130,6 +147,7 @@ would replace the `%{Title}` part with the currently playing song's title.
 We call the `Title` part a `FormatPart`.
 
 ### `FormatPart`
+[`enum FormatPart`](https://github.com/Noah2610/cmus-status-line/blob/master/src/cmus_status/output/format/format_part.rs#L8)  
 Any of the following format parts can be used  
 in the `format` string inside `%{...}` blocks.  
 They will be replaced with a string value.
@@ -198,6 +216,7 @@ They will be replaced with a string value.
   ```
 
 ### `FormatExpression`
+[`enum FormatExpression`](https://github.com/Noah2610/cmus-status-line/blob/master/src/cmus_status/output/format/format_expression.rs#L4)  
 A `FormatExpression` can be used as the first argument to  
 `If` `FormatPart`s. They will always evaluate to either `true` or `false`.
 

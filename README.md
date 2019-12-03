@@ -73,7 +73,7 @@ cmus-status-line dump-config > ~/.config/cmus-status-line/config.toml
 ```
 
 The configuration has a `format` key, which is a string.  
-<details open>
+<details>
 <summary>
 The default format string looks like this:
 </summary>

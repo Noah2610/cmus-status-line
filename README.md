@@ -154,39 +154,49 @@ They will be replaced with a string value.
 
 - __`Text(String)`__  
   Returns the given string.
+
 - __`Title`__  
   Returns the currently playing song's title.  
   Any underscores (`_`) will be replaced with spaces (` `).
+
 - __`Status`__  
   Returns the current playback status (`CmusPlaybackStatus`),  
   which can be one of:
     - `Playing`
     - `Paused`
-    - `Stopped`
+    - `Stopped`  
+<br />
 - __`Truncate(FormatPart, usize)`__  
   Returns the wrapped `FormatPart`'s return string,  
   truncated to the given `usize` length.  
+
   Example: `Truncate(Title, 20)`  
   which will return the full title of the song,  
   if it has less than or exactly `20` characters.  
   If it has less, the title will be truncated to `20` characters,  
   with trailing `...` characters.
+
 - __`HtmlEscape(FormatPart)`__  
   Uses the [`htmlescape::encode_minimal`][htmlescape_encode_minimal] function, to escape  
   any HTML syntax such as `<>&` from the wrapped `FormatPart`.  
+
   Example: `HtmlEscape(Title)`
+
 - __`ProgressBar(String)`__  
   Returns a progress bar for the playback of the currently playing song.  
   The given string acts as a config for which characters to use.  
   The first and last characters of the string are used as the boundary characters of the bar.  
   The second and second to last characters are used as the _full_ and _empty_ characters.  
   The total length of the string is the length of the progress bar.  
+
   Example: `ProgressBar("<##-->")` will use `<>` as the bar boundary characters,  
   the `#` as the _full_ character, and the `-` as the _empty_ character.  
   The progress bar will have a length of `6` characters.
+
 - __`Container(Vec<FormatPart>)`__  
   This wraps multiple `FormatPart`s into a single one.  
   Useful in combination with other `FormatPart`s.  
+
   Example:
   ```
   Truncate(Container([
@@ -198,9 +208,11 @@ They will be replaced with a string value.
   ```
   which will truncate the combined length of the bar,  
   the song title, and some static text to 60 characters or less.
+
 - __`If(FormatExpression, FormatPart)`__  
   Returns the evaluated `FormatPart`, if the `FormatExpression` returns `true`.  
   See the section on `FormatExpression` for available expressions.  
+
   Example:
   ```
   Container([
@@ -222,21 +234,27 @@ A `FormatExpression` can be used as the first argument to
 
 - __`True`__  
   Always returns `true`.
+
 - __`False`__  
   Always returns `false`.
+
 - __`And(FormatExpression, FormatExpression)`__  
   Returns `true` if both of the given `FormatExpression`s evaluate to `true`.
+
 - __`Or(FormatExpression, FormatExpression)`__  
   Returns `true` if either of the given `FormatExpression`s evaluate to `true`.
+
 - __`Not(FormatExpression)`__  
   Inverts the given expression.
+
 - __`IsStatus(CmusPlaybackStatus)`__  
   Returns `true` if the given `CmusPlaybackStatus`  
   is the currently playing song's status.
   `CmusPlaybackStatus` can be one of:
     - `Playing`
     - `Paused`
-    - `Stopped`
+    - `Stopped`  
+<br />
 
   Example:
   ```

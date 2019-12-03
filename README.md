@@ -7,7 +7,7 @@
 - [Description](#description)
 - [Installation](#installation)
   - [Binaries](#binaries)
-  - [Install from [crates.io]](#install-from-cratesio)
+  - [Install from crates.io](#install-from-cratesio)
 - [Usage](#usage)
 - [Configuration](#configuration)
   - [`FormatPart`](#formatpart)

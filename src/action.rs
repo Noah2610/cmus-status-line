@@ -9,6 +9,7 @@ pub mod prelude {
 pub enum Action {
     Status,
     Help,
+    Version,
 }
 
 impl Default for Action {
@@ -48,11 +49,10 @@ pub fn action() -> MyResult<Action> {
         .0;
 
     if action_opt.is_none() {
-        action_opt = if args.options.has(&CliOption::Help) {
-            Some(Action::Help)
-        } else {
-            None
-        };
+        action_opt = args.options.iter().find_map(|opt| match opt {
+            CliOption::Help => Some(Action::Help),
+            CliOption::Version => Some(Action::Version),
+        });
     }
 
     Ok(action_opt.unwrap_or_else(Action::default))

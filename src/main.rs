@@ -34,6 +34,10 @@ fn run() -> error::MyResult<()> {
             print_help();
             Ok(())
         }
+        Action::Version => {
+            print_version();
+            Ok(())
+        }
     }
 }
 
@@ -45,7 +49,8 @@ USAGE:
     {} [OPTIONS] [COMMAND]
 
 OPTIONS:
-    -h, --help   Print this help message and exit.
+    -h, --help     Print this help message and exit.
+    -v, --version  Print version information and exit.
 
 COMMANDS:
     status
@@ -57,4 +62,8 @@ COMMANDS:
         meta::DESCRIPTION,
         meta::NAME
     );
+}
+
+fn print_version() {
+    println!("{} v{}", meta::NAME, meta::VERSION)
 }

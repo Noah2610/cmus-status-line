@@ -45,6 +45,9 @@ impl TryFrom<&str> for CliOptions {
                         names::OPT_DOUBLE_HELP => {
                             Ok(vec![CliOption::Help].into())
                         }
+                        names::OPT_DOUBLE_VERSION => {
+                            Ok(vec![CliOption::Version].into())
+                        }
                         _ => Err(()),
                     },
                     // SINGLE
@@ -53,6 +56,10 @@ impl TryFrom<&str> for CliOptions {
                         .try_fold(Vec::new(), |mut opts, c| match c {
                             names::OPT_SINGLE_HELP => {
                                 opts.push(CliOption::Help);
+                                Ok(opts)
+                            }
+                            names::OPT_SINGLE_VERSION => {
+                                opts.push(CliOption::Version);
                                 Ok(opts)
                             }
                             _ => Err(()),
@@ -72,4 +79,5 @@ impl TryFrom<&str> for CliOptions {
 #[derive(PartialEq)]
 pub enum CliOption {
     Help,
+    Version,
 }

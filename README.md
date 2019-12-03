@@ -164,8 +164,8 @@ They will be replaced with a string value.
   which can be one of:
     - `Playing`
     - `Paused`
-    - `Stopped`  
-<br />
+    - `Stopped`
+
 - __`Truncate(FormatPart, usize)`__  
   Returns the wrapped `FormatPart`'s return string,  
   truncated to the given `usize` length.  
@@ -253,8 +253,7 @@ A `FormatExpression` can be used as the first argument to
   `CmusPlaybackStatus` can be one of:
     - `Playing`
     - `Paused`
-    - `Stopped`  
-<br />
+    - `Stopped`
 
   Example:
   ```

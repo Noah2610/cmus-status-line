@@ -46,7 +46,7 @@ pub enum FormatPart {
     ///     %{ ProgressBar("<###--->") }
     ///     """
     /// ```
-    /// ... where the first and last characters (`<,``>`) are used as the start and end
+    /// ... where the first and last characters (`<`,`>`) are used as the start and end
     /// characters of the bar, respectively. The second character in the string (`#`) is used
     /// as the "full" character, and the second to last as the "empty" (`-`) character.
     /// The "full" characters are printed if the playback percentage of the track has reached that

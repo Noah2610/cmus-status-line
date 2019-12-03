@@ -1,13 +1,14 @@
+mod format_expression;
 mod format_part;
 
 pub mod prelude {
-    pub use super::format_part::{FormatExpression, FormatPart};
+    pub use super::format_expression::FormatExpression;
+    pub use super::format_part::FormatPart;
     pub use super::Format;
 }
 
 pub use prelude::*;
 
-use super::*;
 use crate::error::prelude::*;
 use regex::Regex;
 use std::convert::TryFrom;

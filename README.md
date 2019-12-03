@@ -268,9 +268,10 @@ A `FormatExpression` can be used as the first argument to
 
 ---
 
-__TODO:__ Documentation, cleanup, crates.io upload!  
-It's working fine right now, but the project's not finished.
+## License
+Distributed under the terms of the [MIT license][license].
 
 [releases]:                  https://github.com/Noah2610/cmus-status-line/releases
 [crates.io]:                 https://crates.io/crates/cmus-status-line
 [htmlescape_encode_minimal]: https://docs.rs/htmlescape/0.3.1/htmlescape/fn.encode_minimal.html
+[license]:                   https://github.com/Noah2610/cmus-status-line/blob/master/LICENSE

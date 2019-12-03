@@ -197,6 +197,39 @@ They will be replaced with a string value.
   ])
   ```
 
+### `FormatExpression`
+A `FormatExpression` can be used as the first argument to  
+`If` `FormatPart`s. They will always evaluate to either `true` or `false`.
+
+- __`True`__  
+  Always returns `true`.
+- __`False`__  
+  Always returns `false`.
+- __`And(FormatExpression, FormatExpression)`__  
+  Returns `true` if both of the given `FormatExpression`s evaluate to `true`.
+- __`Or(FormatExpression, FormatExpression)`__  
+  Returns `true` if either of the given `FormatExpression`s evaluate to `true`.
+- __`Not(FormatExpression)`__  
+  Inverts the given expression.
+- __`IsStatus(CmusPlaybackStatus)`__  
+  Returns `true` if the given `CmusPlaybackStatus`  
+  is the currently playing song's status.
+  `CmusPlaybackStatus` can be one of:
+    - `Playing`
+    - `Paused`
+    - `Stopped`
+
+  Example:
+  ```
+  If(
+      IsStatus(Playing),
+      Container([
+          Text("playing song: "),
+          Title,
+      ]),
+  ),
+  ```
+
 ---
 
 __TODO:__ Documentation, cleanup, crates.io upload!  

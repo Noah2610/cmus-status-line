@@ -105,7 +105,7 @@ pub enum FormatExpression {
     /// Inverts the given expression.
     Not(Box<FormatExpression>),
     /// Returns `true` if the given `CmusPlaybackStatus`
-    /// is the currently playing's song `CmusPlaybackStatus`.
+    /// is the currently playing song's `CmusPlaybackStatus`.
     IsStatus(CmusPlaybackStatus),
 }
 

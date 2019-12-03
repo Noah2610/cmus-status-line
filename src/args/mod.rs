@@ -9,6 +9,7 @@ pub mod prelude {
 mod names {
     pub(super) const CMD_HELP: &str = "help";
     pub(super) const CMD_STATUS: &str = "status";
+    pub(super) const CMD_DUMP_CONFIG: &str = "dump-config";
     pub(super) const OPT_DOUBLE_HELP: &str = "help";
     pub(super) const OPT_DOUBLE_VERSION: &str = "version";
     pub(super) const OPT_SINGLE_HELP: char = 'h';

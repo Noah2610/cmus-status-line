@@ -4,7 +4,7 @@ use std::fs::File;
 use std::io::Read;
 use std::path::PathBuf;
 
-const DEFAULT_CONFIG: &str = include_str!("../../config.toml");
+pub const DEFAULT_CONFIG: &str = include_str!("../../config.toml");
 const KEYWORD_CONFIG_DIR: &str = "<CONFIG_DIR>";
 const CONFIG_FILES: [&str; 2] = ["./config.toml", "<CONFIG_DIR>/config.toml"];
 

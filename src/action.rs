@@ -10,6 +10,7 @@ pub enum Action {
     Status,
     Help,
     Version,
+    DumpConfig,
 }
 
 impl Default for Action {
@@ -40,6 +41,7 @@ pub fn action() -> MyResult<Action> {
                     }
                 }
                 CliCommand::Help => Ok(Action::Help),
+                CliCommand::DumpConfig => Ok(Action::DumpConfig),
             };
             match act_or_err {
                 Ok(act) => Ok((Some(act), cmd_index + 1)),

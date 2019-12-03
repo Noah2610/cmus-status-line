@@ -81,3 +81,19 @@ pub enum CliOption {
     Help,
     Version,
 }
+
+impl CliOption {
+    pub fn name_single(&self) -> char {
+        match self {
+            CliOption::Help => names::OPT_SINGLE_HELP,
+            CliOption::Version => names::OPT_SINGLE_VERSION,
+        }
+    }
+
+    pub fn name_double(&self) -> &str {
+        match self {
+            CliOption::Help => names::OPT_DOUBLE_HELP,
+            CliOption::Version => names::OPT_DOUBLE_VERSION,
+        }
+    }
+}

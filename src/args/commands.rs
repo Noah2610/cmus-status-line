@@ -24,6 +24,7 @@ impl ToString for CliCommands {
 pub enum CliCommand {
     Status,
     Help,
+    DumpConfig,
 }
 
 impl CliCommand {
@@ -31,6 +32,7 @@ impl CliCommand {
         match self {
             CliCommand::Status => names::CMD_STATUS,
             CliCommand::Help => names::CMD_HELP,
+            CliCommand::DumpConfig => names::CMD_DUMP_CONFIG,
         }
     }
 }
@@ -47,6 +49,7 @@ impl TryFrom<&str> for CliCommand {
             match name {
                 names::CMD_STATUS => Ok(CliCommand::Status),
                 names::CMD_HELP => Ok(CliCommand::Help),
+                names::CMD_DUMP_CONFIG => Ok(CliCommand::DumpConfig),
                 _ => Err(()),
             }
         } else {

@@ -12,6 +12,7 @@
 - [Configuration](#configuration)
   - [`FormatPart`](#formatpart)
   - [`FormatExpression`](#formatexpression)
+- [License](#license)
 
 ---
 </details>

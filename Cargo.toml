@@ -1,8 +1,9 @@
 [package]
-name = "cmus-status-line"
-version = "0.0.0"
-authors = ["Noah Rosenzweig <rosenzweig.noah@gmail.com>"]
-edition = "2018"
+name        = "cmus-status-line"
+version     = "0.0.0"
+authors     = ["Noah Rosenzweig <rosenzweig.noah@gmail.com>"]
+edition     = "2018"
+description = "Prints cmus playback information in a configurable format to stdout"
 
 [dependencies]
 dirs       = "2.0.2"

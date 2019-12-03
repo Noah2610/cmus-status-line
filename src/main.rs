@@ -38,5 +38,23 @@ fn run() -> error::MyResult<()> {
 }
 
 fn print_help() {
-    println!("{} USAGE\nTODO", meta::NAME);
+    println!(
+        r#"{}
+
+USAGE:
+    {} [OPTIONS] [COMMAND]
+
+OPTIONS:
+    -h, --help   Print this help message and exit.
+
+COMMANDS:
+    status
+        Prints the current cmus playback status
+        with the format configured in the config.toml file.
+        This is the default command, so you may omit this argument.
+    help
+        Print this help message and exit."#,
+        meta::DESCRIPTION,
+        meta::NAME
+    );
 }

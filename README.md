@@ -10,6 +10,8 @@
   - [Install from crates.io](#install-from-cratesio)
 - [Usage](#usage)
 - [Configuration](#configuration)
+  - [Simple configuration example](#simple-configuration-example)
+  - [The `format` key](#the-format-key)
   - [`FormatPart`](#formatpart)
   - [`FormatExpression`](#formatexpression)
 - [License](#license)

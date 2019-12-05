@@ -84,48 +84,19 @@ mkdir -p ~/.config/cmus-status-line
 cmus-status-line dump-config > ~/.config/cmus-status-line/config.toml
 ```
 
-The configuration has a `format` key, which is a string.  
-<details>
-<summary>
-    The default format string looks like this:
-</summary>
+The default configuration is in the [`config.toml`][default_config] file.
 
+### Simple configuration example
+Here's a small and simple configuration example to get you started,  
+if you don't want to / don't have the time to read the details:
 ```
 format = """
-%{ If(
-    Or(IsStatus(Playing), IsStatus(Paused)),
-    Container([
-        Container([
-            If(IsStatus(Playing),
-                Text(" ")),
-            If(IsStatus(Paused),
-                Text(" ")),
-            If(IsStatus(Stopped),
-                Text(" ")),
-        ]),
-
-        If(
-            IsStatus(Playing),
-            Container([
-                Truncate(Title, 60),
-                Text("  "),
-                ProgressBar("<####---->"),
-            ]),
-        ),
-
-        If(
-            IsStatus(Paused),
-            Container([
-                Truncate(Title, 10),
-                Text(" "),
-                ProgressBar("<##->"),
-            ]),
-        ),
-    ]),
-)}
+%{Title} - %{ProgressBar("<####---->")}
 """
 ```
-</details>
+
+### The `format` key
+The configuration has a `format` key, which is a string.  
 
 Any plain text in the string is simply printed in the format,  
 so a `format` string with this value:
@@ -133,6 +104,7 @@ so a `format` string with this value:
 format = "my cmus status!"
 ```
 would simply print `my cmus status!`.  
+Any new-line characters are ignored.  
 To add dynamic content, you can use the `%{...}` syntax to inject information,  
 for example:
 ```
@@ -267,6 +239,7 @@ A `FormatExpression` can be used as the first argument to
 Distributed under the terms of the [MIT license][license].
 
 [releases]:                  https://github.com/Noah2610/cmus-status-line/releases
+[default_config]:            https://github.com/Noah2610/cmus-status-line/blob/master/config.toml
 [crates.io]:                 https://crates.io/crates/cmus-status-line
 [htmlescape_encode_minimal]: https://docs.rs/htmlescape/0.3.1/htmlescape/fn.encode_minimal.html
 [license]:                   https://github.com/Noah2610/cmus-status-line/blob/master/LICENSE

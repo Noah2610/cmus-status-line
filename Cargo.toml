@@ -6,6 +6,7 @@ edition     = "2018"
 description = "Prints cmus playback information in a configurable format to stdout"
 repository  = "https://github.com/Noah2610/cmus-status-line"
 homepage    = "https://github.com/Noah2610/cmus-status-line"
+readme      = "README.md"
 license     = "MIT"
 keywords    = ["cmus", "music", "status"]
 categories  = ["command-line-utilities"]

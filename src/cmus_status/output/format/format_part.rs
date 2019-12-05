@@ -136,11 +136,11 @@ impl ProgressBarConfig {
 impl TryFrom<String> for ProgressBarConfig {
     type Error = Error;
     fn try_from(s: String) -> MyResult<Self> {
-        let len = s.len();
+        let chars = s.chars().collect::<Vec<char>>();
+        let len = chars.len();
         if len < 2 {
             Err(Error::ProgressBarConfigMinLen(2, s))
         } else if len == 2 {
-            let chars = s.chars().collect::<Vec<char>>();
             Ok(ProgressBarConfig {
                 start:       None,
                 end:         None,
@@ -149,7 +149,6 @@ impl TryFrom<String> for ProgressBarConfig {
                 total_width: len,
             })
         } else if len == 3 {
-            let chars = s.chars().collect::<Vec<char>>();
             Ok(ProgressBarConfig {
                 start:       Some(*chars.get(0).unwrap()),
                 end:         None,
@@ -158,7 +157,6 @@ impl TryFrom<String> for ProgressBarConfig {
                 total_width: len,
             })
         } else {
-            let chars = s.chars().collect::<Vec<char>>();
             Ok(ProgressBarConfig {
                 start:       Some(*chars.get(0).unwrap()),
                 end:         Some(*chars.get(len - 1).unwrap()),

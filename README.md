@@ -18,13 +18,8 @@
 </details>
 
 ## Description
-Prints the current `cmus` playback status in a customizable format to stdout.
-
-<details>
-<summary>
-    Example output with default config
-</summary>
-
+Prints the current `cmus` playback status in a customizable format to stdout.  
+Example output with default config:
 ```
 $ cmus-status-line # When PLAYING
  Undertale - Megalovania  <###----->
@@ -32,7 +27,6 @@ $ cmus-status-line # When PLAYING
 $ cmus-status-line # When PAUSED
  Underta... <#-->
 ```
-</details>
 
 ## Installation
 ### Binaries

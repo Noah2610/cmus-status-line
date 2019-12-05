@@ -32,12 +32,10 @@ $ cmus-status-line # When PAUSED
 
 ## Installation
 ### Binaries
-__TODO: Build and upload binaries!__  
-Binaries for __Linux__ and __Windows__ are available
-from the [GitHub releases][releases] page.
+Binaries for __Linux__ and __Windows__ are available from the [GitHub releases][releases] page.  
+__Note:__ Windows binaries are not tested, if there is any problem please let me know by opening an issue!
 
 ### Install from [crates.io]
-__TODO: Upload to crates.io!__  
 ```
 cargo install cmus-status-line
 ```

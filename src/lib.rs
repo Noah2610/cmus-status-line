@@ -6,26 +6,14 @@ extern crate ron;
 extern crate serde;
 extern crate toml;
 
-mod action;
-mod args;
-mod cmus_status;
-mod config;
-mod error;
-mod meta;
+pub mod action;
+pub mod args;
+pub mod cmus_status;
+pub mod config;
+pub mod error;
+pub mod meta;
 
-fn main() {
-    use std::process;
-
-    match run() {
-        Ok(_) => (),
-        Err(e) => {
-            eprintln!("{}", e);
-            process::exit(1);
-        }
-    }
-}
-
-fn run() -> error::MyResult<()> {
+pub fn run() -> error::MyResult<()> {
     use action::prelude::*;
 
     match action()? {

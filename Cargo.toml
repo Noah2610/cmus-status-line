@@ -11,6 +11,10 @@ license     = "MIT"
 keywords    = ["cmus", "music", "status"]
 categories  = ["command-line-utilities"]
 
+[[bin]]
+name = "cmus-status-line"
+path = "src/app.rs"
+
 [dependencies]
 dirs       = "2.0.2"
 htmlescape = "0.3.1"

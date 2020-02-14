@@ -6,7 +6,11 @@ use std::path::PathBuf;
 
 pub const DEFAULT_CONFIG: &str = include_str!("../../config.toml");
 const KEYWORD_CONFIG_DIR: &str = "<CONFIG_DIR>";
-const CONFIG_FILES: [&str; 2] = ["./config.toml", "<CONFIG_DIR>/config.toml"];
+const CONFIG_FILES: [&str; 3] = [
+    "./config.toml",
+    "<CONFIG_DIR>/format.ron",
+    "<CONFIG_DIR>/config.toml",
+];
 
 #[derive(Deserialize)]
 pub struct Config {
@@ -14,9 +18,19 @@ pub struct Config {
 }
 
 impl Config {
+    /// RON or TOML string
+    pub fn from_str(s: &str) -> MyResult<Self> {
+        Self::from_ron(s).or_else(|_| Self::from_toml(s))
+    }
+
+    fn from_ron(ron: &str) -> MyResult<Self> {
+        ron::de::from_str(ron)
+            .map_err(|e| Error::FailedParsingConfig(None, e.to_string()))
+    }
+
     fn from_toml(toml: &str) -> MyResult<Self> {
         toml::de::from_str(toml)
-            .or_else(|e| Err(Error::FailedParsingConfig(None, e.to_string())))
+            .map_err(|e| Error::FailedParsingConfig(None, e.to_string()))
     }
 }
 
@@ -25,7 +39,7 @@ pub fn get_config() -> MyResult<Config> {
         if let Ok(mut file) = File::open(&conf_path) {
             let mut file_content = String::new();
             file.read_to_string(&mut file_content).unwrap();
-            Config::from_toml(file_content.as_str()).map_err(|e| {
+            Config::from_str(file_content.as_str()).map_err(|e| {
                 if let Error::FailedParsingConfig(None, msg) = e {
                     Error::FailedParsingConfig(Some(conf_path), msg)
                 } else {

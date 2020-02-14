@@ -77,10 +77,9 @@ impl Error {
                  long: {}",
                 min_len, config,
             ),
-            Error::FailedParsingConfig(Some(filepath), e) => format!(
-                "failed parsing config.toml file at {:?}\n{}",
-                filepath, e
-            ),
+            Error::FailedParsingConfig(Some(filepath), e) => {
+                format!("failed parsing config file at {:?}\n{}", filepath, e)
+            }
             Error::FailedParsingConfig(None, e) => {
                 format!("failed parsing config TOML\n{}", e)
             }

@@ -101,6 +101,18 @@ impl StatusOutput {
                     None
                 }
             }
+
+            FormatPart::IfElse(
+                expression,
+                format_part_true,
+                format_part_false,
+            ) => {
+                if self.is_expression_true(expression) {
+                    self.get_format_text(format_part_true)
+                } else {
+                    self.get_format_text(format_part_false)
+                }
+            }
         }
     }
 

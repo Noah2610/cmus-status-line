@@ -75,16 +75,30 @@ pub enum FormatPart {
     /// ```
     Container(Vec<Box<FormatPart>>),
 
-    /// `If` conditional. If the `FormatExpression` returns `true`,
+    /// `if` conditional. If the `FormatExpression` returns `true`,
     /// then `FormatPart` is printed.
     /// __Config example:__
     /// ```toml
     ///     format = """
     ///     %{ If(IsStatus(Playing),
-    ///        "Cmus is playing a song!") }
+    ///        Text("Cmus is playing a song!")) }
     ///     """
     /// ```
     If(FormatExpression, Box<FormatPart>),
+
+    /// `if/else` conditional. If the `FormatExpression` returns `true`,
+    /// then the _first_ `FormatPart` is printed,
+    /// otherwise the _second_ `FormatPart` is printed.
+    /// __Config example:__
+    /// ```toml
+    ///     format = """
+    ///     %{ IfElse(
+    ///         HasTag("artist"),
+    ///         Tag("artist"),
+    ///         Text("unknown artist")) }
+    ///     """
+    /// ```
+    IfElse(FormatExpression, Box<FormatPart>, Box<FormatPart>),
 }
 
 impl From<Box<FormatPart>> for FormatPart {

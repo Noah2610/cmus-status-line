@@ -40,6 +40,8 @@ impl StatusOutput {
 
             FormatPart::Status => Some(self.data.get_status().to_string()),
 
+            FormatPart::Tag(tag_name) => self.data.get_tag(tag_name),
+
             // TODO: Deprecated
             FormatPart::MatchStatus(playback_status, text) => {
                 if self.data.is_status(playback_status) {

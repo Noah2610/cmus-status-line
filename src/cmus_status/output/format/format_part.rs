@@ -20,6 +20,10 @@ pub enum FormatPart {
     /// Prints the `CmusPlaybackStatus` of the playing song.
     Status,
 
+    /// Prints the tag value for the given tag name.
+    /// If the tag doesn't exist, prints nothing.
+    Tag(String),
+
     /// TODO: Deprecated, use with `FormatPart::If` conditional.
     /// If the first argument's status is the current `CmusPlaybackStatus`,
     /// then, print the given string.

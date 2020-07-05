@@ -40,6 +40,10 @@ impl CmusData {
         &self.status
     }
 
+    pub fn get_tag(&self, tag_name: &str) -> Option<String> {
+        self.tags.get(tag_name).cloned()
+    }
+
     pub fn is_status(&self, other_status: &CmusPlaybackStatus) -> bool {
         &self.status == other_status
     }
@@ -101,7 +105,7 @@ impl TryFrom<String> for CmusData {
                 }
                 TAG_NAME => {
                     let tag_name = data_words
-                        .get(1)
+                        .get(0)
                         .ok_or(Error::CmusExpectDataArguments(1, line.into()))?
                         .to_string();
                     let tag_value = data_words
@@ -110,7 +114,7 @@ impl TryFrom<String> for CmusData {
                         .map(Deref::deref)
                         .collect::<Vec<&str>>()
                         .join(" ");
-                    tags.insert(tag_name, tag_value);
+                    tags.insert(dbg!(tag_name), dbg!(tag_value));
                 }
                 SETTINGS_NAME => {
                     // TODO

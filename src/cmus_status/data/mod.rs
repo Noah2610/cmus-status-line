@@ -11,7 +11,9 @@ pub use playback_status::CmusPlaybackStatus;
 pub use time::{CmusTime, Seconds};
 
 use crate::error::prelude::*;
+use std::collections::HashMap;
 use std::convert::TryFrom;
+use std::ops::Deref;
 use std::path::PathBuf;
 
 #[derive(Debug)]
@@ -19,6 +21,7 @@ pub struct CmusData {
     status:   CmusPlaybackStatus,
     file:     Option<PathBuf>,
     time:     Option<CmusTime>,
+    tags:     HashMap<String, String>,
     settings: CmusSettings,
 }
 
@@ -54,13 +57,14 @@ impl TryFrom<String> for CmusData {
         const FILE_NAME: &str = "file";
         const TIME_DURATION_NAME: &str = "duration";
         const TIME_POSITION_NAME: &str = "position";
+        const TAG_NAME: &str = "tag";
         const SETTINGS_NAME: &str = "set";
 
         let mut status = None;
         let mut file = None;
         let mut time_duration = None;
         let mut time_position = None;
-        // let mut settings = Vec::new();
+        let mut tags = HashMap::new();
 
         for line in string.trim().split("\n") {
             let words = line.split_whitespace().collect::<Vec<&str>>();
@@ -70,42 +74,43 @@ impl TryFrom<String> for CmusData {
                      (first word per line)\nOutput:\n{}",
                     string
                 )))?;
+            let data_words = words
+                .iter()
+                .skip(1)
+                .map(Deref::deref)
+                .collect::<Vec<&str>>();
+            let data_line = data_words.join(" ");
 
             match *data_name {
                 STATUS_NAME => {
-                    status = Some(CmusPlaybackStatus::try_from(
-                        *words.get(1).ok_or(Error::CmusExpectDataArguments(
-                            1,
-                            line.into(),
-                        ))?,
-                    )?);
+                    status =
+                        Some(CmusPlaybackStatus::try_from(data_line.as_str())?);
                 }
                 FILE_NAME => {
-                    file = Some(PathBuf::from(*words.get(1).ok_or(
-                        Error::CmusExpectDataArguments(1, line.into()),
-                    )?));
+                    file = Some(PathBuf::from(data_line.as_str()));
                 }
                 TIME_DURATION_NAME => {
-                    time_duration = Some(
-                        (*words.get(1).ok_or(
-                            Error::CmusExpectDataArguments(1, line.into()),
-                        )?)
-                        .parse::<Seconds>()
-                        .or(Err(
-                            Error::CouldntParseTimeToNumber(line.into()),
-                        ))?,
-                    );
+                    time_duration = Some(data_line.parse::<Seconds>().or(
+                        Err(Error::CouldntParseTimeToNumber(line.into())),
+                    )?);
                 }
                 TIME_POSITION_NAME => {
-                    time_position = Some(
-                        (*words.get(1).ok_or(
-                            Error::CmusExpectDataArguments(1, line.into()),
-                        )?)
-                        .parse::<Seconds>()
-                        .or(Err(
-                            Error::CouldntParseTimeToNumber(line.into()),
-                        ))?,
-                    );
+                    time_position = Some(data_line.parse::<Seconds>().or(
+                        Err(Error::CouldntParseTimeToNumber(line.into())),
+                    )?);
+                }
+                TAG_NAME => {
+                    let tag_name = data_words
+                        .get(1)
+                        .ok_or(Error::CmusExpectDataArguments(1, line.into()))?
+                        .to_string();
+                    let tag_value = data_words
+                        .iter()
+                        .skip(1)
+                        .map(Deref::deref)
+                        .collect::<Vec<&str>>()
+                        .join(" ");
+                    tags.insert(tag_name, tag_value);
                 }
                 SETTINGS_NAME => {
                     // TODO
@@ -116,8 +121,8 @@ impl TryFrom<String> for CmusData {
 
         Ok(Self {
             status: status.ok_or(Error::CmusMissingData(STATUS_NAME.into()))?,
-            file:   file,
-            time:   time_duration
+            file: file,
+            time: time_duration
                 .and_then(|duration| {
                     time_position
                         .and_then(|position| Some((duration, position)))
@@ -126,6 +131,7 @@ impl TryFrom<String> for CmusData {
                     duration: duration,
                     position: position,
                 }),
+            tags,
             // TODO
             settings: CmusSettings {},
         })

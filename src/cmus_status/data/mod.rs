@@ -44,6 +44,10 @@ impl CmusData {
         self.tags.get(tag_name).cloned()
     }
 
+    pub fn has_tag(&self, tag_name: &str) -> bool {
+        self.tags.contains_key(tag_name)
+    }
+
     pub fn is_status(&self, other_status: &CmusPlaybackStatus) -> bool {
         &self.status == other_status
     }

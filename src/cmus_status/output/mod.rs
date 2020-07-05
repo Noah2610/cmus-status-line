@@ -124,6 +124,8 @@ impl StatusOutput {
             FormatExpression::IsStatus(playback_status) => {
                 self.data.is_status(&playback_status)
             }
+
+            FormatExpression::HasTag(tag_name) => self.data.has_tag(&tag_name),
         }
     }
 }

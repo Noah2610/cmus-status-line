@@ -15,4 +15,6 @@ pub enum FormatExpression {
     /// Returns `true` if the given `CmusPlaybackStatus`
     /// is the currently playing song's `CmusPlaybackStatus`.
     IsStatus(CmusPlaybackStatus),
+    /// Returns `true` if the given tag is set for the current track.
+    HasTag(String),
 }

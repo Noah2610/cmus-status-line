@@ -133,6 +133,13 @@ They will be replaced with a string value.
     - `Paused`
     - `Stopped`
 
+- __`Tag(String)`__
+  Returns the _tag_ meta value for the given tag name  
+  (such as "artist", "album", "tracknumber").  
+  Returns nothing if the tag doesn't exist.
+
+  Example: `Tag("artist")`
+
 - __`Truncate(FormatPart, usize)`__  
   Returns the wrapped `FormatPart`'s return string,  
   truncated to the given `usize` length.  
@@ -232,6 +239,10 @@ A `FormatExpression` can be used as the first argument to
       ]),
   ),
   ```
+
+- __`HasTag(String)`__  
+  Returns `true` if the given tag name is set for the current track.
+  Returns `false` if the tag doesn't exist on the track.
 
 ---
 

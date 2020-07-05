@@ -201,6 +201,21 @@ They will be replaced with a string value.
   ])
   ```
 
+- __`IfElse(FormatExpression, FormatPart, FormatPart)`__  
+  If the given `FormatExpression` returns `true`, then  
+  returns the _first_ `FormatPart`, otherwise returns the _second_ `FormatPart`.
+
+  Example:
+  ```
+  Container([
+      IfElse(
+          IsStatus(Playing),
+          Title,
+          Text("not playing"),
+      ),
+  ])
+  ```
+
 ### `FormatExpression`
 [`enum FormatExpression`](https://github.com/Noah2610/cmus-status-line/blob/master/src/cmus_status/output/format/format_expression.rs#L4)  
 A `FormatExpression` can be used as the first argument to  

@@ -118,7 +118,7 @@ impl TryFrom<String> for CmusData {
                         .map(Deref::deref)
                         .collect::<Vec<&str>>()
                         .join(" ");
-                    tags.insert(dbg!(tag_name), dbg!(tag_value));
+                    tags.insert(tag_name, tag_value);
                 }
                 SETTINGS_NAME => {
                     // TODO

@@ -2,7 +2,7 @@ use crate::error::prelude::*;
 use std::convert::TryFrom;
 use std::fmt;
 
-#[derive(Debug, PartialEq, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Deserialize)]
 pub enum CmusPlaybackStatus {
     Playing,
     Paused,

@@ -1,5 +1,5 @@
 mod builder;
-mod format;
+pub mod format;
 
 pub use format::prelude::*;
 
@@ -12,7 +12,7 @@ use builder::StatusOutputBuilder;
 const OVERFLOW_STR: &str = "...";
 
 pub struct StatusOutput {
-    data:   CmusData,
+    data: CmusData,
     format: Format,
 }
 

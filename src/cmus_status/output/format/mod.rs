@@ -15,7 +15,7 @@ use std::convert::TryFrom;
 
 const DEFAULT_FORMAT: &str = r#"NO FORMAT"#;
 
-#[derive(Deserialize)]
+#[derive(Debug, Clone, Deserialize)]
 #[serde(default, try_from = "String")]
 pub struct Format {
     parts: Vec<FormatPart>,

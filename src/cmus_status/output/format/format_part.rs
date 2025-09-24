@@ -4,7 +4,7 @@ use super::FormatExpression;
 use crate::cmus_status::data::CmusPlaybackStatus;
 use crate::error::prelude::*;
 
-#[derive(Deserialize)]
+#[derive(Debug, Clone, Deserialize)]
 pub enum FormatPart {
     /// Just print the given text.
     /// This whole variant can be represented as a string.
@@ -113,13 +113,13 @@ impl<'a> From<Box<&'a FormatPart>> for &'a FormatPart {
     }
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Debug, Clone, Deserialize)]
 #[serde(try_from = "String")]
 pub struct ProgressBarConfig {
-    pub start:   Option<char>,
-    pub end:     Option<char>,
-    pub full:    char,
-    pub empty:   char,
+    pub start: Option<char>,
+    pub end: Option<char>,
+    pub full: char,
+    pub empty: char,
     total_width: usize,
 }
 
@@ -160,26 +160,26 @@ impl TryFrom<String> for ProgressBarConfig {
             Err(Error::ProgressBarConfigMinLen(2, s))
         } else if len == 2 {
             Ok(ProgressBarConfig {
-                start:       None,
-                end:         None,
-                full:        *chars.get(0).unwrap(),
-                empty:       *chars.get(1).unwrap(),
+                start: None,
+                end: None,
+                full: *chars.get(0).unwrap(),
+                empty: *chars.get(1).unwrap(),
                 total_width: len,
             })
         } else if len == 3 {
             Ok(ProgressBarConfig {
-                start:       Some(*chars.get(0).unwrap()),
-                end:         None,
-                full:        *chars.get(1).unwrap(),
-                empty:       *chars.get(2).unwrap(),
+                start: Some(*chars.get(0).unwrap()),
+                end: None,
+                full: *chars.get(1).unwrap(),
+                empty: *chars.get(2).unwrap(),
                 total_width: len,
             })
         } else {
             Ok(ProgressBarConfig {
-                start:       Some(*chars.get(0).unwrap()),
-                end:         Some(*chars.get(len - 1).unwrap()),
-                full:        *chars.get(1).unwrap(),
-                empty:       *chars.get(len - 2).unwrap(),
+                start: Some(*chars.get(0).unwrap()),
+                end: Some(*chars.get(len - 1).unwrap()),
+                full: *chars.get(1).unwrap(),
+                empty: *chars.get(len - 2).unwrap(),
                 total_width: len,
             })
         }

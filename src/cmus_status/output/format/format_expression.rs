@@ -1,6 +1,6 @@
 use crate::cmus_status::data::CmusPlaybackStatus;
 
-#[derive(Deserialize)]
+#[derive(Debug, Clone, Deserialize)]
 pub enum FormatExpression {
     /// Always returns `true`.
     True,
